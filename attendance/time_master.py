@@ -39,7 +39,7 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list):
         print_stdout(str(rest_start_time))
         print_stdout(str(rest_end_time))
 
-        if dt_start_time <= rest_start_time and rest_end_time <= dt_end_time:
+        if dt_start_time <= rest_start_time <= rest_end_time <= dt_end_time:
             total_rest_time_minute += int((rest_end_time - rest_start_time).total_seconds() / 60)
             print_stdout("1")
         elif dt_start_time <= rest_start_time < dt_end_time:
