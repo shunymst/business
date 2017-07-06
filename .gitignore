@@ -3,4 +3,5 @@ __pycache__
 *.pyc
 logs/*
 logs/!.gitkeep
+file/*
 conf/environment.ini
