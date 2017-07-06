@@ -25,6 +25,8 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list):
 
     total_rest_time_minute = 0
     for i, rest_time in enumerate(rest_time_list):
+        print(rest_time["start_time"])
+        print(str(rest_time["start_time"]))
         rest_start_time = datetime.datetime.strptime(str(rest_time["start_time"]), "%H:%M:%S")
         rest_end_time = datetime.datetime.strptime(str(rest_time["end_time"]), "%H:%M:%S")
         if dt_start_time <= rest_start_time and rest_end_time <= dt_end_time:
