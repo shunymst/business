@@ -207,7 +207,7 @@ def list_append():
 def kintai_users_get():
 
     request_json = get_request_param(request)
-    db_conn = db_connection.DBConn(g_ini["DB_CONNECTION_STR"])
+    db_conn = db_connection.DBConn(g_ini_def["DB_CONNECTION_STR"])
 
     user_info = users(db_conn, request_json)
 
@@ -243,6 +243,6 @@ def print_stdout(text):
 if __name__ == "__main__":
 
     # INIファイル読込
-    g_ini = common_module.read_ini("conf/environment.ini")
+    g_ini_def = common_module.read_ini("conf/environment.ini")["DEFAULT"]
 
     app.run(host="0.0.0.0", port=51080)
