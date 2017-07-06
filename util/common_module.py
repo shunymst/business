@@ -7,6 +7,8 @@ import datetime
 import re
 import json
 import base64
+import sys
+
 from Crypto.Cipher import AES
 from logging import getLogger, handlers, StreamHandler, DEBUG, INFO, WARN, WARNING, ERROR, FATAL, CRITICAL
 from collections import OrderedDict
@@ -247,3 +249,9 @@ def format_number(number):
 # 時分フォーマット
 def format_hour_minute(minute):
     return "{0:02d}".format(int(minute / 60)) + ":" + "{0:02d}".format(int(minute % 60))
+
+
+def print_stdout(text):
+    sys.stdout.write(text)
+    sys.stdout.write("\n")
+    sys.stdout.flush()

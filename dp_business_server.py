@@ -1,16 +1,17 @@
 import copy
 import json
 import os
-import sys
+
 from flask import Flask, request, jsonify
 
-from util import common_module
-from util import db_connection
-from util import send_mail
 from attendance import code_master
 from attendance import results
 from attendance import time_master
 from attendance import users
+from util import common_module
+from util import db_connection
+from util import send_mail
+from util.common_module import print_stdout
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(24)  # セッション情報を暗号化するためのキーを設定
@@ -346,12 +347,6 @@ def create_result_json(send_content):
         json.dumps(send_content, indent=4, separators=(",", ": "), ensure_ascii=False)
     ))
     return jsonify(send_content)
-
-
-def print_stdout(text):
-    sys.stdout.write(text)
-    sys.stdout.write("\n")
-    sys.stdout.flush()
 
 
 if __name__ == "__main__":
