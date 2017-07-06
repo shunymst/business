@@ -34,8 +34,8 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list):
         if rest_end_time < dt_start_time:
             rest_end_time += datetime.timedelta(days=1)
 
-        print_stdout(rest_time["start_time"])
-        print_stdout(rest_time["end_time"])
+        print_stdout(str(rest_time["start_time"]))
+        print_stdout(str(rest_time["end_time"]))
         print_stdout(rest_start_time)
         print_stdout(rest_end_time)
 
