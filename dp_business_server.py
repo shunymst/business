@@ -9,6 +9,7 @@ from util import db_connection
 from util import send_mail
 from attendance import code_master
 from attendance import results
+from attendance import time_master
 from attendance import users
 
 app = Flask(__name__)
@@ -239,15 +240,46 @@ def attendance_result_check_result():
     return create_result_json(send_content)
 
 
-# 勤怠実績登録
-@app.route("/attendance/result/insert", methods=["GET", "POST"])
-def attendance_result_insert():
+# 勤務時間、休憩時間計算
+@app.route("/attendance/result/calc_time", methods=["GET", "POST"])
+def attendance_result_calc_time():
 
     request_json = get_request_param(request)
-    stat = results.check_result(g_db_conn, request_json)
+
+    work_time_minute, total_rest_time_minute = time_master.get_rest_time(g_db_conn, request_json)
+
+    str_work_time = common_module.format_hour_minute(work_time_minute)
+    str_rest_time = common_module.format_hour_minute(total_rest_time_minute)
     send_content = {
-        "status": stat,
+        "work_time": str_work_time,
+        "rest_time": str_rest_time,
         "message": "OK"
+    }
+
+    return create_result_json(send_content)
+
+
+# 勤怠実績登録(勤務)
+@app.route("/attendance/result/insert/work", methods=["GET", "POST"])
+def attendance_result_insert_work():
+
+    request_json = get_request_param(request)
+    message = results.insert_work(g_db_conn, request_json)
+    send_content = {
+        "message": message
+    }
+
+    return create_result_json(send_content)
+
+
+# 勤怠実績登録(休暇)
+@app.route("/attendance/result/insert/holiday", methods=["GET", "POST"])
+def attendance_result_insert_holiday():
+
+    request_json = get_request_param(request)
+    message = results.insert_holiday(g_db_conn, request_json)
+    send_content = {
+        "message": message
     }
 
     return create_result_json(send_content)

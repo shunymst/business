@@ -243,3 +243,7 @@ def format_number(number):
         return int(number)
     else:
         return number
+
+# 時分フォーマット
+def format_hour_minute(minute):
+    return "{0:02d}".format(int(minute / 60)) + ":" + "{0:02d}".format(int(minute % 60))
