@@ -7,6 +7,8 @@ from flask import Flask, request, jsonify
 from util import common_module
 from util import db_connection
 from util import send_mail
+from attendance import code_master
+from attendance import results
 from attendance import users
 
 app = Flask(__name__)
@@ -203,8 +205,8 @@ def list_append():
 
 # 勤怠管理用 Start
 # ユーザー情報取得
-@app.route("/attendance/users/get", methods=["GET", "POST"])
-def kintai_users_get():
+@app.route("/attendance/user/get", methods=["GET", "POST"])
+def attendance_users_get():
 
     request_json = get_request_param(request)
 
@@ -219,6 +221,62 @@ def kintai_users_get():
         send_content = {
             "message": "Not Found"
         }
+
+    return create_result_json(send_content)
+
+
+# 実績登録情報確認
+@app.route("/attendance/result/check_result", methods=["GET", "POST"])
+def attendance_results_check_result():
+
+    request_json = get_request_param(request)
+    stat = results.check_result(g_db_conn, request_json)
+    send_content = {
+        "status": stat,
+        "message": "OK"
+    }
+
+    return create_result_json(send_content)
+
+
+# 勤務区分リスト取得
+@app.route("/attendance/code/work_division", methods=["GET", "POST"])
+def attendance_code_work_division():
+
+    request_json = get_request_param(request)
+    code_list = code_master.get_work_division(g_db_conn, request_json)
+    send_content = {
+        "code_list": code_list,
+        "message": "OK"
+    }
+
+    return create_result_json(send_content)
+
+
+# 休暇区分リスト取得
+@app.route("/attendance/code/holiday_division", methods=["GET", "POST"])
+def attendance_results_check_result():
+
+    request_json = get_request_param(request)
+    code_list = code_master.get_holiday_division(g_db_conn, request_json)
+    send_content = {
+        "code_list": code_list,
+        "message": "OK"
+    }
+
+    return create_result_json(send_content)
+
+
+# 休暇事由リスト取得
+@app.route("/attendance/code/holiday_reason", methods=["GET", "POST"])
+def attendance_results_check_result():
+
+    request_json = get_request_param(request)
+    code_list = code_master.get_holiday_reason(g_db_conn, request_json)
+    send_content = {
+        "code_list": code_list,
+        "message": "OK"
+    }
 
     return create_result_json(send_content)
 # 勤怠管理用 End
