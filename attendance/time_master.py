@@ -36,17 +36,20 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list):
 
         print_stdout(str(rest_time["start_time"]))
         print_stdout(str(rest_time["end_time"]))
-        print_stdout(rest_start_time)
-        print_stdout(rest_end_time)
+        print_stdout(str(rest_start_time))
+        print_stdout(str(rest_end_time))
 
         if dt_start_time <= rest_start_time and rest_end_time <= dt_end_time:
             total_rest_time_minute += int((rest_end_time - rest_start_time).total_seconds() / 60)
+            print_stdout("1")
         elif dt_start_time <= rest_start_time and rest_end_time > dt_end_time:
             total_rest_time_minute += int((rest_end_time - dt_end_time).total_seconds() / 60)
+            print_stdout("2")
         elif dt_start_time > rest_start_time and rest_end_time <= dt_end_time:
             total_rest_time_minute += int((dt_start_time - rest_start_time).total_seconds() / 60)
+            print_stdout("3")
 
-        print_stdout(total_rest_time_minute)
+        print_stdout(str(total_rest_time_minute))
 
     work_time_minute = int(diff_time.total_seconds() / 60) - total_rest_time_minute
 
