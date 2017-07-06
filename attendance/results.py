@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from util import db_connection
 
 
 def check_result(db_conn, request_json):

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
-from util import db_connection
 
 
 def get_rest_time(db_conn, request_json):
