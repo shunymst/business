@@ -4,8 +4,8 @@ import datetime
 
 
 def get_rest_time(db_conn, request_json):
-    sql = "select start_time, end_time from time_master where work_division = (%s) and time_division = '2' "
-    param = [request_json["work_division"]]
+    sql = "select start_time, end_time from time_master where employee_division = (%s) and time_division = '2' "
+    param = [request_json["employee_division"]]
     results = db_conn.select_dict(sql, param)
 
     return get_minute_work_rest_time(
