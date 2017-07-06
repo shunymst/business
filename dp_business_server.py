@@ -242,11 +242,7 @@ def print_stdout(text):
 
 if __name__ == "__main__":
 
-    args = sys.argv
-    if len(sys.argv) != 2:
-        raise Exception("iniファイルを引数に設定してください")
-
     # INIファイル読込
-    g_ini = common_module.read_ini(args[1])
+    g_ini = common_module.read_ini("conf/environment.ini")
 
     app.run(host="0.0.0.0", port=51080)
