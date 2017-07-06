@@ -4,11 +4,27 @@ from util import db_connection
 
 
 def get_work_division(db_conn, request_json):
-    sql = "select id, email, name, employee_division, (select code_name from code_master where class='0001' and code=users.employee_division) as employee_division_name from users where mid = (%s) and enabled = true"
+    sql = "select code, code_name from code_master where class = '0002' and remarks1 = (%s)"
     param = [request_json["employee_division"]]
-    user_info = db_conn.select_dict(sql, param)
+    results = db_conn.select_dict(sql, param)
 
-    return user_info
+    return results
+
+
+def get_holiday_division(db_conn,request_json):
+    sql = "select code, code_name from code_master where class = '0003' and remarks1 = (%s)"
+    param = [request_json["holiday_division"]]
+    results = db_conn.select_dict(sql, param)
+
+    return results
+
+
+def get_holiday_reason(db_conn,request_json):
+    sql = "select code, code_name from code_master where class = '0004' and remarks1 = (%s)"
+    param = [request_json["holiday_reason"]]
+    results = db_conn.select_dict(sql, param)
+
+    return results
 
 
 if __name__ == "__main__":
