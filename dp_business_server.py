@@ -255,7 +255,7 @@ def attendance_code_work_division():
 
 # 休暇区分リスト取得
 @app.route("/attendance/code/holiday_division", methods=["GET", "POST"])
-def attendance_results_check_result():
+def attendance_code_holiday_division():
 
     request_json = get_request_param(request)
     code_list = code_master.get_holiday_division(g_db_conn, request_json)
@@ -269,7 +269,7 @@ def attendance_results_check_result():
 
 # 休暇事由リスト取得
 @app.route("/attendance/code/holiday_reason", methods=["GET", "POST"])
-def attendance_results_check_result():
+def attendance_code_holiday_reason():
 
     request_json = get_request_param(request)
     code_list = code_master.get_holiday_reason(g_db_conn, request_json)
