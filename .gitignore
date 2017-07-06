@@ -5,3 +5,4 @@ logs/*
 logs/!.gitkeep
 file/*
 conf/environment.ini
+/debug.py
