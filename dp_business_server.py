@@ -201,17 +201,27 @@ def list_append():
     return create_result_json(send_content)
 
 
-# 勤怠管理用
-# 勤怠スタート
+# 勤怠管理用 Start
+# ユーザー情報取得
 @app.route("/attendance/users/get", methods=["GET", "POST"])
 def kintai_users_get():
 
     request_json = get_request_param(request)
-    db_conn = db_connection.DBConn(g_ini_def["DB_CONNECTION_STR"])
 
-    user_info = users.get(db_conn, request_json)
+    user_info = users.get(g_db_conn, request_json)
 
-    return create_result_json(user_info)
+    if user_info and len(user_info) > 0:
+        send_content = {
+            "user_info": user_info[0],
+            "message": "OK"
+        }
+    else:
+        send_content = {
+            "message": "Not Found"
+        }
+
+    return create_result_json(send_content)
+# 勤怠管理用 End
 
 
 def get_request_param(req):
@@ -244,5 +254,7 @@ if __name__ == "__main__":
 
     # INIファイル読込
     g_ini_def = common_module.read_ini("conf/environment.ini")["DEFAULT"]
+
+    g_db_conn = db_connection.DBConn(g_ini_def["DB_CONNECTION_STR"])
 
     app.run(host="0.0.0.0", port=51080)
