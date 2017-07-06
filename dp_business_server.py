@@ -227,7 +227,21 @@ def attendance_users_get():
 
 # 実績登録情報確認
 @app.route("/attendance/result/check_result", methods=["GET", "POST"])
-def attendance_results_check_result():
+def attendance_result_check_result():
+
+    request_json = get_request_param(request)
+    stat = results.check_result(g_db_conn, request_json)
+    send_content = {
+        "status": stat,
+        "message": "OK"
+    }
+
+    return create_result_json(send_content)
+
+
+# 勤怠実績登録
+@app.route("/attendance/result/insert", methods=["GET", "POST"])
+def attendance_result_insert():
 
     request_json = get_request_param(request)
     stat = results.check_result(g_db_conn, request_json)
