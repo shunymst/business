@@ -209,7 +209,7 @@ def kintai_users_get():
     request_json = get_request_param(request)
     db_conn = db_connection.DBConn(g_ini_def["DB_CONNECTION_STR"])
 
-    user_info = users(db_conn, request_json)
+    user_info = users.get(db_conn, request_json)
 
     return create_result_json(user_info)
 
