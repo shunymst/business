@@ -80,8 +80,8 @@ def insert_holiday(db_conn, request_json):
     param = [
         request_json["user_id"],
         request_json["attendance_date"],
-        request_json["holiday_division"],
-        request_json["holiday_reason"],
+        holiday_division,
+        holiday_reason,
         request_json["remarks"]
     ]
     db_conn.update(sql, param)
