@@ -24,7 +24,7 @@ def check_result(db_conn, request_json):
         if results[0]["results_division"] == "1":
             work_time = "{}～{}".format(str(result["start_time"]), str(result["end_time"]))
         else:
-            work_time = code_master.get_code_name(db_conn, code_master.CLASS_HOLIDAY_DIVISION, result[""])
+            work_time = code_master.get_code_name(db_conn, code_master.CLASS_HOLIDAY_DIVISION, result["holiday_division"])
 
         remarks = result["remarks"]
 
