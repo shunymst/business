@@ -348,6 +348,24 @@ def attendance_result_delete():
     }
 
     return create_result_json(send_content)
+
+
+# 文字列結合
+@app.route("/attendance/concat", methods=["GET", "POST"])
+def attendance_concat():
+
+    request_json = get_request_param(request)
+
+    if request_json["list"]:
+        send_content = {
+            "list": request_json["list"] + ", " + request_json["value"]
+        }
+    else:
+        send_content = {
+            "list": request_json["value"]
+        }
+
+    return create_result_json(send_content)
 # 勤怠管理用 End
 
 
