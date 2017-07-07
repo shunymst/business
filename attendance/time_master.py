@@ -4,6 +4,37 @@ import datetime
 from util.common_module import print_stdout
 
 
+def get_work_time(db_conn, request_json):
+    sql = "select start_time, end_time from time_master where employee_division = (%s) and time_division = '1' "
+    param = [request_json["employee_division"]]
+    results = db_conn.select_dict(sql, param)
+
+    if results and len(results) > 0:
+        return results[0]
+    return None
+
+
+def get_delay_flag(request_json, work_time):
+
+    dt_start_time = datetime.datetime.strptime(request_json["start_time"].split(" ")[1], "%H:%M:%S")
+    dt_end_time = datetime.datetime.strptime(request_json["end_time"].split(" ")[1], "%H:%M:%S")
+
+    work_start_time = datetime.datetime.strptime(str(work_time["start_time"]), "%H:%M:%S")
+    work_end_time = datetime.datetime.strptime(str(work_time["end_time"]), "%H:%M:%S")
+    # 日またぎ業務の場合
+    if work_start_time > work_end_time:
+        # 開始時間が勤務時間(終了)より小さい場合は+1日
+        if dt_start_time < work_end_time:
+            dt_start_time += datetime.timedelta(days=1)
+        # 勤務時間(終了)を+1日
+        work_end_time += datetime.timedelta(days=1)
+
+    if work_start_time < dt_start_time < work_end_time :
+        return "1"
+    else:
+        return "0"
+
+
 def get_rest_time(db_conn, request_json):
     sql = "select start_time, end_time from time_master where employee_division = (%s) and time_division = '2' "
     param = [request_json["employee_division"]]
@@ -34,23 +65,18 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list):
         if rest_end_time < dt_start_time:
             rest_end_time += datetime.timedelta(days=1)
 
-        print_stdout(str(rest_time["start_time"]))
-        print_stdout(str(rest_time["end_time"]))
         print_stdout(str(rest_start_time))
         print_stdout(str(rest_end_time))
 
         # if dt_start_time <= rest_start_time <= rest_end_time <= dt_end_time:
         if (dt_start_time <= rest_start_time) and (rest_end_time <= dt_end_time):
             total_rest_time_minute += int((rest_end_time - rest_start_time).total_seconds() / 60)
-            print_stdout("1")
         # elif dt_start_time <= rest_start_time < dt_end_time:
         elif (dt_start_time <= rest_start_time) and (rest_start_time < dt_end_time):
             total_rest_time_minute += int((dt_end_time - rest_start_time).total_seconds() / 60)
-            print_stdout("2")
         # elif dt_start_time < rest_end_time <= dt_end_time:
         elif (dt_start_time < rest_end_time) and (rest_end_time <= dt_end_time):
             total_rest_time_minute += int((rest_end_time - dt_start_time).total_seconds() / 60)
-            print_stdout("3")
 
         print_stdout(str(total_rest_time_minute))
 
