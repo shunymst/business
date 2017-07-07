@@ -48,5 +48,23 @@ def change_code_by_name(db_conn, class_code, code_name, division1=None):
     return ""
 
 
+def get_code_name(db_conn, class_code, code):
+
+    sql = "select code_name from code_master where class = (%s) and code_name = (%s)"
+    param = [class_code, code]
+
+    if division1:
+        sql += " and division1 = (%s)"
+        param.append(division1)
+
+    results = db_conn.select_dict(sql, param)
+
+    if results and len(results) > 0:
+        return results[0]["code_name"]
+
+    print("未登録：class={}, code={}".format(class_code, code))
+    return ""
+
+
 if __name__ == "__main__":
     pass

@@ -67,19 +67,26 @@ def get_rest_time(db_conn, request_json):
 
 def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list):
 
+    # TODO: 形式変わりそう
     dt_start_time = datetime.datetime.strptime(str_start_time.split(" ")[1], "%H:%M:%S")
     dt_end_time = datetime.datetime.strptime(str_end_time.split(" ")[1], "%H:%M:%S")
+
+    # 日またぎ業務の場合
     if dt_start_time >= dt_end_time:
         dt_end_time += datetime.timedelta(days=1)
+
     diff_time = dt_end_time - dt_start_time
 
     total_rest_time_minute = 0
     for i, rest_time in enumerate(rest_time_list):
         rest_start_time = datetime.datetime.strptime(str(rest_time["start_time"]), "%H:%M:%S")
+        rest_end_time = datetime.datetime.strptime(str(rest_time["end_time"]), "%H:%M:%S")
+
+        # 作業開始時間より休憩時間の開始時間が先の場合は+1日
         if rest_start_time < dt_start_time:
             rest_start_time += datetime.timedelta(days=1)
 
-        rest_end_time = datetime.datetime.strptime(str(rest_time["end_time"]), "%H:%M:%S")
+        # 作業開始時間より休憩時間の終了時間が先の場合は+1日
         if rest_end_time < dt_start_time:
             rest_end_time += datetime.timedelta(days=1)
 
