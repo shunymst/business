@@ -233,8 +233,9 @@ def attendance_result_check_result():
 
     request_json = get_request_param(request)
 
-    return results.check_result(g_db_conn, request_json)
-
+    send_content = results.check_result(g_db_conn, request_json)
+    
+    return create_result_json(send_content)
 
 # 勤務時間、休憩時間計算
 @app.route("/attendance/result/calc_time", methods=["GET", "POST"])
