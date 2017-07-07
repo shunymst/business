@@ -14,25 +14,39 @@ def get_work_time(db_conn, request_json):
     return None
 
 
-def get_delay_flag(request_json, work_time):
+def get_delay_and_early_flag(request_json, work_time):
 
     dt_start_time = datetime.datetime.strptime(request_json["start_time"].split(" ")[1], "%H:%M:%S")
     dt_end_time = datetime.datetime.strptime(request_json["end_time"].split(" ")[1], "%H:%M:%S")
 
+    # 日またぎ業務の場合
+    if dt_start_time > dt_end_time:
+        dt_end_time += datetime.timedelta(days=1)
+
     work_start_time = datetime.datetime.strptime(str(work_time["start_time"]), "%H:%M:%S")
     work_end_time = datetime.datetime.strptime(str(work_time["end_time"]), "%H:%M:%S")
-    # 日またぎ業務の場合
+    # 規定勤務時間が日またぎ業務の場合
     if work_start_time > work_end_time:
-        # 開始時間が勤務時間(終了)より小さい場合は+1日
-        if dt_start_time < work_end_time:
-            dt_start_time += datetime.timedelta(days=1)
-        # 勤務時間(終了)を+1日
+
+        # 規定勤務時間の終了時間を+1日
         work_end_time += datetime.timedelta(days=1)
 
+        # 開始時間が規定勤務時間の終了時間より小さい場合は+1日
+        if dt_start_time < work_end_time:
+            dt_start_time += datetime.timedelta(days=1)
+
+        # 終了時間が規定勤務時間の終了時間より小さい場合は+1日
+        if dt_end_time < work_end_time:
+            dt_end_time += datetime.timedelta(days=1)
+
+    delay_flag = "0"
+    early_flag = "0"
     if work_start_time < dt_start_time < work_end_time :
-        return "1"
-    else:
-        return "0"
+        delay_flag = "1"
+    if work_start_time < dt_end_time < work_end_time :
+        early_flag = "1"
+
+    return delay_flag, early_flag
 
 
 def get_rest_time(db_conn, request_json):

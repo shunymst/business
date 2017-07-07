@@ -254,12 +254,13 @@ def attendance_result_calc_time():
 
     # 遅刻判定取得
     work_time = time_master.get_work_time(g_db_conn, request_json)
-    delay_flag = time_master.get_delay_flag(request, work_time)
+    delay_flag, early_flag = time_master.get_delay_and_early_flag(request, work_time)
 
     send_content = {
         "work_time": str_work_time,
         "rest_time": str_rest_time,
         "delay_flag": delay_flag,
+        "early_flag": early_flag,
         "message": "OK"
     }
 
