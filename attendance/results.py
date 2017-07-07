@@ -4,7 +4,7 @@ from attendance import code_master
 
 
 def check_result(db_conn, request_json):
-    sql = "select attendance_date, results_division, status, start_time, end_time, status, remarks from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "
+    sql = "select attendance_date, results_division, status, start_time, end_time, holiday_division, remarks from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "
     param = [
         request_json["user_id"],
         request_json["attendance_date"]
