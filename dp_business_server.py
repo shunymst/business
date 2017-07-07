@@ -272,6 +272,7 @@ def attendance_result_calc_time():
 def attendance_result_insert_work():
 
     request_json = get_request_param(request)
+    results.delete(g_db_conn, request_json)
     message = results.insert_work(g_db_conn, request_json)
     send_content = {
         "message": message
@@ -285,6 +286,7 @@ def attendance_result_insert_work():
 def attendance_result_insert_holiday():
 
     request_json = get_request_param(request)
+    results.delete(g_db_conn, request_json)
     message = results.insert_holiday(g_db_conn, request_json)
     send_content = {
         "message": message
