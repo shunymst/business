@@ -37,7 +37,7 @@ def calc_time(db_conn, request_json):
 
 
 def insert_work(db_conn, request_json):
-    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '1', (%s), to_time((%s), 'yyyy/mm/dd hh24:mi:ss'), to_time((%s), 'yyyy/mm/dd hh24:mi:ss'), to_time((%s), 'hh24:mi:ss'), to_time((%s), 'hh24:mi:ss'), (%s), null, null, (%s), null) "
+    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '1', (%s), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), (%s), null, null, (%s), null) "
     param = [
         request_json["user_id"],
         request_json["attendance_date"],
