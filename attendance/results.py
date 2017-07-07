@@ -73,7 +73,7 @@ def insert_holiday(db_conn, request_json):
 
 
 def delete(db_conn, request_json):
-    sql = "delete results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "
+    sql = "delete from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "
     param = [
         request_json["user_id"],
         request_json["attendance_date"]
