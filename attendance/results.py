@@ -3,20 +3,23 @@
 from attendance import code_master
 
 def check_result(db_conn, request_json):
-    sql = "select attendance_date, status from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "
+    sql = "select attendance_date, start_time, end_time, remarks, status from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "
     param = [
         request_json["user_id"],
         request_json["attendance_date"]
     ]
     results = db_conn.select_dict(sql, param)
+    result = None
+    status = "未登録"
 
     if results and len(results) > 0:
+        result = results[0]
         if results[0]["status"] == "2":
-            return "承認済み"
+            status = "承認済み"
         else:
-            return "承認待ち"
+            status = "承認待ち"
 
-    return "未登録"
+    return status, result
 
 
 def calc_time(db_conn, request_json):
