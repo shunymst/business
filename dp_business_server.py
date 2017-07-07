@@ -233,18 +233,18 @@ def attendance_result_check_result():
 
     request_json = get_request_param(request)
 
-    status, result = results.check_result(g_db_conn, request_json)
+    status = results.check_result(g_db_conn, request_json)
 
-    work_time = None
-    remarks = None
-    if result:
-        work_time = "{}～{}".format(str(result["start_time"]), str(result["end_time"]))
-        remarks = result["remarks"]
+    # work_time = None
+    # remarks = None
+    # if result:
+    #     work_time = "{}～{}".format(str(result["start_time"]), str(result["end_time"]))
+    #     remarks = result["remarks"]
 
     send_content = {
         "status": status,
-        "work_time": work_time,
-        "remarks": remarks,
+        # "work_time": work_time,
+        # "remarks": remarks,
         "message": "OK"
     }
 
