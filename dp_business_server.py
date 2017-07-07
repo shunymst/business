@@ -247,13 +247,19 @@ def attendance_result_calc_time():
 
     request_json = get_request_param(request)
 
+    # 作業時間・休憩時間取得
     work_time_minute, total_rest_time_minute = time_master.get_rest_time(g_db_conn, request_json)
-
     str_work_time = common_module.format_hour_minute(work_time_minute)
     str_rest_time = common_module.format_hour_minute(total_rest_time_minute)
+
+    # 遅刻判定取得
+    work_time = time_master.get_work_time(g_db_conn, request_json)
+    delay_flag = time_master.get_delay_flag(request, work_time)
+
     send_content = {
         "work_time": str_work_time,
         "rest_time": str_rest_time,
+        "delay_flag": delay_flag,
         "message": "OK"
     }
 
