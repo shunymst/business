@@ -235,7 +235,8 @@ def attendance_result_check_result():
 
     status, result = results.check_result(g_db_conn, request_json)
 
-    work_time, remarks = None
+    work_time = None
+    remarks = None
     if result:
         work_time = "{}～{}".format(str(result["start_time"]), str(result["end_time"]))
         remarks = result["remarks"]
