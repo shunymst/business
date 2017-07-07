@@ -18,15 +18,15 @@ def get_delay_and_early_flag(request_json, work_time):
 
     dt_start_time = datetime.datetime.strptime(request_json["start_time"].split(" ")[1], "%H:%M:%S")
     dt_end_time = datetime.datetime.strptime(request_json["end_time"].split(" ")[1], "%H:%M:%S")
+    work_start_time = datetime.datetime.strptime(str(work_time["start_time"]), "%H:%M:%S")
+    work_end_time = datetime.datetime.strptime(str(work_time["end_time"]), "%H:%M:%S")
 
-    print("IN", dt_start_time, dt_end_time, work_start_time, work_end_time)
+    print("IN:", str(dt_start_time), str(dt_end_time), str(work_start_time), str(work_end_time))
 
     # 日またぎ業務の場合
     if dt_start_time > dt_end_time:
         dt_end_time += datetime.timedelta(days=1)
 
-    work_start_time = datetime.datetime.strptime(str(work_time["start_time"]), "%H:%M:%S")
-    work_end_time = datetime.datetime.strptime(str(work_time["end_time"]), "%H:%M:%S")
     # 規定勤務時間が日またぎ業務の場合
     if work_start_time > work_end_time:
 
@@ -48,7 +48,7 @@ def get_delay_and_early_flag(request_json, work_time):
     if (work_start_time < dt_end_time) and (dt_end_time < work_end_time):
         early_flag = "1"
 
-    print("OUT", dt_start_time, dt_end_time, work_start_time, work_end_time)
+    print("OUT:", str(dt_start_time), str(dt_end_time), str(work_start_time), str(work_end_time))
 
     return delay_flag, early_flag
 
