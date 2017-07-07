@@ -44,7 +44,7 @@ def change_code_by_name(db_conn, class_code, code_name, division1=None):
     if results and len(results) > 0:
         return results[0]["code"]
 
-    print("未登録：class={}, code_name={}, division1={}")
+    print("未登録：class={}, code_name={}, division1={}".format(class_code, code_name, division1))
     return ""
 
 
