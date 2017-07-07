@@ -335,6 +335,19 @@ def attendance_code_holiday_reason():
     }
 
     return create_result_json(send_content)
+
+
+# 勤怠実績取消
+@app.route("/attendance/result/delete", methods=["GET", "POST"])
+def attendance_result_delete():
+
+    request_json = get_request_param(request)
+    message = results.delete(g_db_conn, request_json)
+    send_content = {
+        "message": message
+    }
+
+    return create_result_json(send_content)
 # 勤怠管理用 End
 
 
