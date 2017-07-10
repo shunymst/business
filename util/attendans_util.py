@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 import copy
-from util.common_module import print_stdout
 
 
 # 遅刻・早退判定
@@ -14,7 +13,7 @@ def get_delay_and_early_flag(request_json, work_time):
     work_start_time = datetime.datetime.strptime(str(work_time["start_time"]), "%H:%M:%S")
     work_end_time = datetime.datetime.strptime(str(work_time["end_time"]), "%H:%M:%S")
 
-    # print("IN:", str(dt_start_time), str(dt_end_time), str(work_start_time), str(work_end_time))
+    # print_stdout("IN:", str(dt_start_time), str(dt_end_time), str(work_start_time), str(work_end_time))
 
     # 日またぎ業務の場合
     if dt_start_time > dt_end_time:
@@ -42,7 +41,7 @@ def get_delay_and_early_flag(request_json, work_time):
     if (work_start_time < dt_end_time) and (dt_end_time < work_end_time):
         early_flag = "1"
 
-    # print("OUT:", str(dt_start_time), str(dt_end_time), str(work_start_time), str(work_end_time))
+    # print_stdout("OUT:", str(dt_start_time), str(dt_end_time), str(work_start_time), str(work_end_time))
 
     return delay_flag, early_flag
 
