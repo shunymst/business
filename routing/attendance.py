@@ -31,6 +31,20 @@ def attendance_users_get():
     return routing_util.create_result_json(send_content)
 
 
+# 実績登録初期化
+@app.route("/attendance/result/init", methods=["GET", "POST"])
+def attendance_concat():
+
+    # request_json = routing_util.get_request_param(request)
+
+    send_content = {
+        "interruption_time": "なし",
+        "outside_work_time": "なし"
+    }
+
+    return routing_util.create_result_json(send_content)
+
+
 # 実績登録情報確認
 @app.route("/attendance/result/check_result", methods=["GET", "POST"])
 def attendance_result_check_result():
