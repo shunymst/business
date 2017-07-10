@@ -264,8 +264,8 @@ def attendance_result_calc_time():
 
     str_work_time = common_module.format_hour_minute(work_time_minute)
     str_rest_time = common_module.format_hour_minute(total_rest_time_minute)
-    str_outside_work_time = common_module.format_hour_minute(total_rest_time_minute)
-    str_interruption_time = common_module.format_hour_minute(total_rest_time_minute)
+    str_outside_work_time = common_module.format_hour_minute(total_outside_work_time_minute)
+    str_interruption_time = common_module.format_hour_minute(total_interruption_time_minute)
 
     # 遅刻判定取得
     work_time = time_master.get_work_time(g_db_conn, request_json)
