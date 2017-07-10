@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from attendance import code_master
+from attendance import interruption
 
 
 def check_result(db_conn, request_json):
-    sql = "select attendance_date, results_division, status, start_time, end_time, holiday_division, remarks from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "
+    sql = "select attendance_date, results_division, status, start_time, end_time, holiday_division, remarks from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "  # noqa
     param = [
         request_json["user_id"],
         request_json["attendance_date"]
@@ -24,7 +25,11 @@ def check_result(db_conn, request_json):
         if results[0]["results_division"] == "1":
             work_time = "{}～{}".format(str(result["start_time"]), str(result["end_time"]))
         else:
-            work_time = code_master.get_code_name(db_conn, code_master.CLASS_HOLIDAY_DIVISION, result["holiday_division"])
+            work_time = code_master.get_code_name(
+                db_conn,
+                code_master.CLASS_HOLIDAY_DIVISION,
+                result["holiday_division"]
+            )
 
         remarks = result["remarks"]
 
@@ -39,9 +44,9 @@ def check_result(db_conn, request_json):
 
 
 def insert_work(db_conn, request_json):
-    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '1', (%s), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), (%s), null, null, (%s), null) "
+    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '1', (%s), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), (%s), null, null, (%s), null) "  # noqa
 
-    # コード変換
+    # 勤務区分コード変換
     work_division = code_master.change_code_by_name(
         db_conn, code_master.CLASS_WORK_DIVISION,
         request_json["work_division"],
@@ -61,11 +66,13 @@ def insert_work(db_conn, request_json):
     ]
     db_conn.update(sql, param)
 
+    interruption.insert(db_conn, request_json)
+
     return "OK"
 
 
 def insert_holiday(db_conn, request_json):
-    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '2', null, null, null, null, null, null, (%s), (%s), (%s), null) "
+    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '2', null, null, null, null, null, null, (%s), (%s), (%s), null) "  # noqa
 
     # コード変換
     holiday_division = code_master.change_code_by_name(
@@ -98,6 +105,8 @@ def delete(db_conn, request_json):
         request_json["attendance_date"]
     ]
     db_conn.update(sql, param)
+
+    interruption.delete(db_conn, request_json)
 
     return "OK"
 

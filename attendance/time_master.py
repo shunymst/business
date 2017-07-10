@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import copy
-import datetime
-from util.common_module import print_stdout
 
 
 def get_work_time(db_conn, request_json):

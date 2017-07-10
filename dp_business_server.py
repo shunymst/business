@@ -10,6 +10,7 @@ from attendance import code_master
 from attendance import results
 from attendance import time_master
 from attendance import users
+from attendance import interruption
 from util import common_module
 from util import db_connection
 from util import send_mail
@@ -239,6 +240,7 @@ def attendance_result_check_result():
 
     return create_result_json(send_content)
 
+
 # 勤務時間、休憩時間、中断時間計算
 @app.route("/attendance/result/calc_time", methods=["GET", "POST"])
 def attendance_result_calc_time():
@@ -248,9 +250,9 @@ def attendance_result_calc_time():
     # 作業時間・休憩時間取得
     rest_time_list = time_master.get_rest_time(g_db_conn, request_json)
 
-    # 業務外作業時間・休憩時間取得
-    outside_work_time_list = convert_time_list(request_json["outside_work_time_list"])
-    interruption_time_list = convert_time_list(request_json["interruption_time_list"])
+    # 業務外作業時間・中断時間設定
+    outside_work_time_list = common_module.convert_time_list(request_json["outside_work_time_list"])
+    interruption_time_list = common_module.convert_time_list(request_json["interruption_time_list"])
 
     # 作業時間・休憩時間・中断時間計算
     work_time_minute, total_rest_time_minute, total_outside_work_time_minute, total_interruption_time_minute = \
@@ -289,6 +291,11 @@ def attendance_result_calc_time():
 def attendance_result_insert_work():
 
     request_json = get_request_param(request)
+
+    # 業務外作業時間・中断時間設定
+    outside_work_time_list = common_module.convert_time_list(request_json["outside_work_time_list"])
+    interruption_time_list = common_module.convert_time_list(request_json["interruption_time_list"])
+
     results.delete(g_db_conn, request_json)
     message = results.insert_work(g_db_conn, request_json)
     send_content = {
@@ -460,7 +467,7 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, outs
     print_stdout(str(str_start_time))
     print_stdout(str(str_end_time))
 
-    work_time_list = [create_time_json(dt_start_time, dt_end_time)]
+    work_time_list = [common_module.create_time_json(dt_start_time, dt_end_time)]
     # 休憩時間計算
     total_rest_time_minute = calc_work_time_and_interruption_time(dt_start_time, work_time_list, rest_time_list)
 
@@ -503,11 +510,11 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
 
                 if work_time["start_time"] < interruption_start_time:
                     work_time_list.append(
-                        create_time_json(work_time["start_time"], interruption_start_time)
+                        common_module.create_time_json(work_time["start_time"], interruption_start_time)
                     )
                 if interruption_end_time < work_time["end_time"]:
                     work_time_list.append(
-                        create_time_json(interruption_end_time, work_time["end_time"])
+                        common_module.create_time_json(interruption_end_time, work_time["end_time"])
                     )
                 interruption_time_minute += int((interruption_end_time - interruption_start_time).total_seconds() / 60)
                 print("1:{}".format(work_time_list))
@@ -517,7 +524,7 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
                 work_time_list.remove(work_time)
                 if work_time["start_time"] < interruption_start_time:
                     work_time_list.append(
-                        create_time_json(work_time["start_time"], interruption_start_time)
+                        common_module.create_time_json(work_time["start_time"], interruption_start_time)
                     )
                 interruption_time_minute += int((work_time["end_time"] - interruption_start_time).total_seconds() / 60)
                 print("2:{}".format(work_time_list))
@@ -525,7 +532,7 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
                 work_time_list.remove(work_time)
                 if interruption_end_time < work_time["end_time"]:
                     work_time_list.append(
-                        create_time_json(interruption_end_time, work_time["end_time"])
+                        common_module.create_time_json(interruption_end_time, work_time["end_time"])
                     )
                 interruption_time_minute += int((interruption_end_time - work_time["start_time"]).total_seconds() / 60)
                 print("3:{}".format(work_time_list))
@@ -538,27 +545,6 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
                 print("5:{}".format(work_time_list))
 
     return interruption_time_minute
-
-
-def create_time_json(start_time, end_time):
-    return {"start_time": start_time, "end_time": end_time}
-
-
-def convert_time_list(str_timelist):
-    dict_time_list = []
-    if str_timelist:
-        list_time = str_timelist.split(";")
-        for time_part in list_time:
-            if time_part:
-                dict_time_list.append(
-                    {
-                        "start_time": time_part[0: time_part.index("～")].split(" ")[1],
-                        "end_time": time_part[time_part.index("～") + 1: time_part.index("(")].split(" ")[1],
-                        "remarks": time_part[time_part.index("(") + 1: len(time_part) - 1]
-                    }
-                )
-
-    return dict_time_list
 
 
 if __name__ == "__main__":
