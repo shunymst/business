@@ -93,8 +93,7 @@ def attendance_result_calc_time():
         "rest_time": str_rest_time,
         "interruption_time": str_interruption_time,
         "outside_work_time": str_outside_work_time,
-        "delay_flag": delay_flag,
-        "early_flag": early_flag,
+        "delay_early_flag": delay_flag or early_flag,
         "message": "OK"
     }
 
