@@ -61,7 +61,3 @@ def get_code_name(db_conn, class_code, code):
 
     print("未登録：class={}, code={}".format(class_code, code))
     return ""
-
-
-if __name__ == "__main__":
-    pass

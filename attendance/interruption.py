@@ -49,7 +49,3 @@ def delete(db_conn, request_json):
     db_conn.update(sql, param)
 
     return "OK"
-
-
-if __name__ == "__main__":
-    pass

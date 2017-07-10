@@ -35,7 +35,3 @@ def get_rest_time(db_conn, request_json):
     results = db_conn.select_dict(sql, param)
 
     return results
-
-
-if __name__ == "__main__":
-    pass

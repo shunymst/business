@@ -8,7 +8,3 @@ def get(db_conn, request_json):
     user_info = db_conn.select_dict(sql, param)
 
     return user_info
-
-
-if __name__ == "__main__":
-    pass
