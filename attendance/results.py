@@ -37,6 +37,8 @@ def check_result(db_conn, request_json):
         "status": status,
         "work_time": work_time if work_time else "なし",
         "remarks": remarks if remarks else "なし",
+        "interruption_time": "なし",
+        "outside_work_time": "なし",
         "message": "OK"
     }
 
