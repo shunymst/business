@@ -9,6 +9,6 @@ def get_holiday_flag(db_conn, request_json):
     results = db_conn.select_dict(sql, param)
 
     if results and len(results) > 0:
-        return results[0]
+        return results[0]["holiday_flag"]
     return "0"
 
