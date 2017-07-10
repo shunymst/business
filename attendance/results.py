@@ -46,7 +46,7 @@ def check_result(db_conn, request_json):
 
 
 def insert_work(db_conn, request_json):
-    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '1', (%s), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), (%s), null, null, (%s), null) "  # noqa
+    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '1', (%s), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), (%s), null, null, (%s), null) "  # noqa
 
     # 勤務区分コード変換
     work_division = code_master.change_code_by_name(
@@ -63,6 +63,7 @@ def insert_work(db_conn, request_json):
         request_json["end_time"],
         request_json["work_time"],
         request_json["rest_time"],
+        request_json["over_time"],
         request_json["delay_reason"],
         request_json["remarks"]
     ]

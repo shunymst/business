@@ -46,8 +46,7 @@ def get_delay_and_early_flag(request_json, work_time):
     return delay_flag, early_flag
 
 
-def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, interruption_time_list,
-                              outside_work_time_list):
+def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, interruption_time_list, work_time):
 
     # TODO: 形式変わる
     dt_start_time = datetime.datetime.strptime(str_start_time.split(" ")[1], "%H:%M:%S")
@@ -67,14 +66,19 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, inte
     # 中断時間計算(休憩時間とかぶる場合は休憩時間が優先される)
     total_interruption_time_minute = calc_work_time_and_interruption_time(dt_start_time, work_time_list, interruption_time_list)  # noqa
 
-    # 業務外作業時間計算(休憩時間とかぶる場合は休憩時間が優先される)
-    total_outside_work_time_minute = calc_work_time_and_interruption_time(dt_start_time, work_time_list, outside_work_time_list)  # noqa
+    # # 業務外作業時間計算(休憩時間とかぶる場合は休憩時間が優先される)
+    # total_outside_work_time_minute = calc_work_time_and_interruption_time(dt_start_time, work_time_list, outside_work_time_list)  # noqa
 
     diff_time = dt_end_time - dt_start_time
-    work_time_minute = \
-        int(diff_time.total_seconds() / 60) - total_rest_time_minute - total_interruption_time_minute - total_outside_work_time_minute  # noqa
+    # work_time_minute = int(diff_time.total_seconds() / 60) - total_rest_time_minute - total_interruption_time_minute - total_outside_work_time_minute  # noqa
+    work_time_minute = int(diff_time.total_seconds() / 60) - total_rest_time_minute - total_interruption_time_minute
 
-    return work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_outside_work_time_minute
+    # 残業時間計算
+    total_over_time_minute = calc_work_time_and_interruption_time(dt_start_time, work_time_list, [work_time])  # noqa
+
+
+    # return work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_outside_work_time_minute
+    return work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_over_time_minute
 
 
 def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interruption_time_list):

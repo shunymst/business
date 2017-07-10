@@ -62,14 +62,17 @@ def attendance_result_calc_time():
 
     request_json = routing_util.get_request_param(request)
 
-    # 作業時間・休憩時間取得
+    # 勤務時間取得
+    work_time = time_master.get_work_time(g_db_conn, request_json)
+
+    # 休憩時間取得
     rest_time_list = time_master.get_rest_time(g_db_conn, request_json)
 
     # 中断時間・業務外勤務時間設定
     interruption_time_list = attendans_util.convert_time_list(request_json["interruption_time_list"])
     # outside_work_time_list = attendans_util.convert_time_list(request_json["outside_work_time_list"])
 
-    # 作業時間・休憩時間・中断時間計算
+    # 作業時間・休憩時間・中断時間・残業時間計算
     work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_outside_work_time_minute = \
         attendans_util.get_minute_work_rest_time(
             request_json["start_time"],
@@ -77,6 +80,7 @@ def attendance_result_calc_time():
             rest_time_list,
             interruption_time_list,
             # outside_work_time_list
+            work_time
         )
 
     str_work_time = attendans_util.format_hour_minute(work_time_minute)
@@ -85,7 +89,6 @@ def attendance_result_calc_time():
     # str_outside_work_time = attendans_util.format_hour_minute(total_outside_work_time_minute)
 
     # 遅刻判定取得
-    work_time = time_master.get_work_time(g_db_conn, request_json)
     delay_flag, early_flag = attendans_util.get_delay_and_early_flag(request_json, work_time)
 
     send_content = {
