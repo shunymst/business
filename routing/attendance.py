@@ -33,7 +33,7 @@ def attendance_users_get():
 
 # 実績登録初期化
 @app.route("/attendance/result/init", methods=["GET", "POST"])
-def attendance_concat():
+def attendance_result_init():
 
     # request_json = routing_util.get_request_param(request)
 
