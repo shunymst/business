@@ -95,8 +95,11 @@ def attendance_result_calc_time():
     # str_outside_work_time = attendans_util.format_hour_minute(total_outside_work_time_minute)
     str_over_time = attendans_util.format_hour_minute(total_over_time_minute)
 
-    # 遅刻判定取得
-    delay_flag, early_flag = attendans_util.get_delay_and_early_flag(request_json, work_time)
+    # 遅刻・早退判定取得
+    delay_flag = "0"
+    early_flag = "0"
+    if holiday_flag:
+        delay_flag, early_flag = attendans_util.get_delay_and_early_flag(request_json, work_time)
 
     send_content = {
         "work_time": str_work_time,
@@ -104,7 +107,7 @@ def attendance_result_calc_time():
         "interruption_time": str_interruption_time,
         # "outside_work_time": str_outside_work_time,
         "over_time": str_over_time,
-        "delay_early_flag": "1" if delay_flag or early_flag else "0",
+        "delay_early_flag": "1" if delay_flag == "1" or early_flag == "1" else "0",
         "message": "OK"
     }
 

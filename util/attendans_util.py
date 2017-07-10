@@ -36,9 +36,12 @@ def get_delay_and_early_flag(request_json, work_time):
 
     delay_flag = "0"
     if (work_start_time < dt_start_time) and (dt_start_time < work_end_time):
+        print("1")
         delay_flag = "1"
+
     early_flag = "0"
     if (work_start_time < dt_end_time) and (dt_end_time < work_end_time):
+        print("2")
         early_flag = "1"
 
     print("OUT:", str(dt_start_time), str(dt_end_time), str(work_start_time), str(work_end_time))
@@ -74,7 +77,6 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, inte
     work_time_minute = int(diff_time.total_seconds() / 60) - total_rest_time_minute - total_interruption_time_minute
 
     # 残業時間計算
-    print(holiday_flag)
     if holiday_flag:
         total_over_time_minute = work_time_minute
     else:
