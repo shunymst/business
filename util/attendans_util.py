@@ -74,6 +74,7 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, inte
     work_time_minute = int(diff_time.total_seconds() / 60) - total_rest_time_minute - total_interruption_time_minute
 
     # 残業時間計算
+    print(holiday_flag)
     if holiday_flag:
         total_over_time_minute = work_time_minute
     else:
@@ -98,8 +99,8 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
             interruption_start_time += datetime.timedelta(days=1)
             interruption_end_time += datetime.timedelta(days=1)
 
-        print_stdout(str(interruption_start_time))
-        print_stdout(str(interruption_end_time))
+        # print_stdout(str(interruption_start_time))
+        # print_stdout(str(interruption_end_time))
 
         work_time_list_roop = copy.deepcopy(work_time_list)
         for work_time in work_time_list_roop:
@@ -116,7 +117,7 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
                         create_time_json(interruption_end_time, work_time["end_time"])
                     )
                 interruption_time_minute += int((interruption_end_time - interruption_start_time).total_seconds() / 60)
-                print("1:{}".format(work_time_list))
+                # print("1:{}".format(work_time_list))
                 break
             elif (work_time["start_time"] <= interruption_start_time) \
                     and (interruption_start_time < work_time["end_time"]):
@@ -126,7 +127,7 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
                         create_time_json(work_time["start_time"], interruption_start_time)
                     )
                 interruption_time_minute += int((work_time["end_time"] - interruption_start_time).total_seconds() / 60)
-                print("2:{}".format(work_time_list))
+                # print("2:{}".format(work_time_list))
             elif (work_time["start_time"] < interruption_end_time) and (interruption_end_time <= work_time["end_time"]):
                 work_time_list.remove(work_time)
                 if interruption_end_time < work_time["end_time"]:
@@ -134,14 +135,14 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
                         create_time_json(interruption_end_time, work_time["end_time"])
                     )
                 interruption_time_minute += int((interruption_end_time - work_time["start_time"]).total_seconds() / 60)
-                print("3:{}".format(work_time_list))
+                # print("3:{}".format(work_time_list))
             elif (interruption_start_time <= work_time["start_time"]) \
                     and (work_time["end_time"] <= interruption_end_time):
                 work_time_list.remove(work_time)
                 interruption_time_minute += int((work_time["end_time"] - work_time["start_time"]).total_seconds() / 60)
-                print("4:{}".format(work_time_list))
-            else:
-                print("5:{}".format(work_time_list))
+                # print("4:{}".format(work_time_list))
+            # else:
+                # print("5:{}".format(work_time_list))
 
     return interruption_time_minute
 
