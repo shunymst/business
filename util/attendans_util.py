@@ -153,7 +153,7 @@ def create_time_json(start_time, end_time):
 # 中断時間リストDict変換処理
 def convert_time_list(str_timelist):
     dict_time_list = []
-    if str_timelist:
+    if str_timelist and str_timelist != "なし":
         list_time = str_timelist.split(",")
         for time_part in list_time:
             if time_part:

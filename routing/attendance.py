@@ -131,6 +131,19 @@ def attendance_result_insert_holiday():
     return routing_util.create_result_json(send_content)
 
 
+# 勤怠実績取消
+@app.route("/attendance/result/delete", methods=["GET", "POST"])
+def attendance_result_delete():
+
+    request_json = routing_util.get_request_param(request)
+    message = results.delete(g_db_conn, request_json)
+    send_content = {
+        "message": message
+    }
+
+    return routing_util.create_result_json(send_content)
+
+
 # 勤務区分リスト取得
 @app.route("/attendance/code/work_division", methods=["GET", "POST"])
 def attendance_code_work_division():
@@ -168,19 +181,6 @@ def attendance_code_holiday_reason():
     send_content = {
         "code_list": code_list,
         "message": "OK"
-    }
-
-    return routing_util.create_result_json(send_content)
-
-
-# 勤怠実績取消
-@app.route("/attendance/result/delete", methods=["GET", "POST"])
-def attendance_result_delete():
-
-    request_json = routing_util.get_request_param(request)
-    message = results.delete(g_db_conn, request_json)
-    send_content = {
-        "message": message
     }
 
     return routing_util.create_result_json(send_content)
