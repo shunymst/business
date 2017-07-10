@@ -154,9 +154,10 @@ def create_time_json(start_time, end_time):
 def convert_time_list(str_timelist):
     dict_time_list = []
     if str_timelist:
-        list_time = str_timelist.split(";")
+        list_time = str_timelist.split(",")
         for time_part in list_time:
             if time_part:
+                time_part = time_part.strip()
                 dict_time_list.append(
                     {
                         "start_time": time_part[0: time_part.index("～")].split(" ")[1],
