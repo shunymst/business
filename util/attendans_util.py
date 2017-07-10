@@ -148,6 +148,8 @@ def calc_work_time_and_interruption_time(dt_start_time, work_time_list, interrup
 
 # 時分フォーマット
 def format_hour_minute(minute):
+    if not minute:
+        return "00:00"
     return "{0:02d}".format(int(minute / 60)) + ":" + "{0:02d}".format(int(minute % 60))
 
 
