@@ -8,6 +8,7 @@ from attendance import code_master
 from attendance import results
 from attendance import time_master
 from attendance import users
+from attendance import calendar
 
 
 # ユーザー情報取得
@@ -68,25 +69,30 @@ def attendance_result_calc_time():
     # 休憩時間取得
     rest_time_list = time_master.get_rest_time(g_db_conn, request_json)
 
+    # 祝日フラグ取得
+    holiday_flag = calendar.get_holiday_flag(g_db_conn, request_json)
+
     # 中断時間・業務外勤務時間設定
     interruption_time_list = attendans_util.convert_time_list(request_json["interruption_time_list"])
     # outside_work_time_list = attendans_util.convert_time_list(request_json["outside_work_time_list"])
 
     # 作業時間・休憩時間・中断時間・残業時間計算
-    work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_outside_work_time_minute = \
+    work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_over_time_minute = \
         attendans_util.get_minute_work_rest_time(
             request_json["start_time"],
             request_json["end_time"],
             rest_time_list,
             interruption_time_list,
             # outside_work_time_list
-            work_time
+            work_time,
+            holiday_flag
         )
 
     str_work_time = attendans_util.format_hour_minute(work_time_minute)
     str_rest_time = attendans_util.format_hour_minute(total_rest_time_minute)
     str_interruption_time = attendans_util.format_hour_minute(total_interruption_time_minute)
     # str_outside_work_time = attendans_util.format_hour_minute(total_outside_work_time_minute)
+    str_over_time = attendans_util.format_hour_minute(total_over_time_minute)
 
     # 遅刻判定取得
     delay_flag, early_flag = attendans_util.get_delay_and_early_flag(request_json, work_time)
@@ -96,6 +102,7 @@ def attendance_result_calc_time():
         "rest_time": str_rest_time,
         "interruption_time": str_interruption_time,
         # "outside_work_time": str_outside_work_time,
+        "total_over_time": str_over_time,
         "delay_early_flag": delay_flag or early_flag,
         "message": "OK"
     }

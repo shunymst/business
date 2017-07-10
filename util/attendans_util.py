@@ -46,7 +46,7 @@ def get_delay_and_early_flag(request_json, work_time):
     return delay_flag, early_flag
 
 
-def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, interruption_time_list, work_time):
+def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, interruption_time_list, work_time, holiday_flag):  # noqa
 
     # TODO: 形式変わる
     dt_start_time = datetime.datetime.strptime(str_start_time.split(" ")[1], "%H:%M:%S")
@@ -74,8 +74,10 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, inte
     work_time_minute = int(diff_time.total_seconds() / 60) - total_rest_time_minute - total_interruption_time_minute
 
     # 残業時間計算
-    total_over_time_minute = calc_work_time_and_interruption_time(dt_start_time, work_time_list, [work_time])  # noqa
-
+    if holiday_flag:
+        total_over_time_minute = work_time_minute
+    else:
+        total_over_time_minute = calc_work_time_and_interruption_time(dt_start_time, work_time_list, [work_time])  # noqa
 
     # return work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_outside_work_time_minute
     return work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_over_time_minute
