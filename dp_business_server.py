@@ -479,7 +479,7 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, outs
 
     diff_time = dt_end_time - dt_start_time
     work_time_minute = \
-        int(diff_time.total_seconds() / 60) - total_outside_work_time_minute - total_interruption_time_minute
+        int(diff_time.total_seconds() / 60) - total_rest_time_minute - total_outside_work_time_minute - total_interruption_time_minute # noqa
 
     return work_time_minute, total_rest_time_minute, total_outside_work_time_minute, total_interruption_time_minute
 
