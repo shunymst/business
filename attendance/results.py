@@ -35,8 +35,8 @@ def check_result(db_conn, request_json):
 
     return_result = {
         "status": status,
-        "work_time": work_time if not work_time else "なし",
-        "remarks": remarks if not remarks else "なし",
+        "work_time": work_time if work_time else "なし",
+        "remarks": remarks if remarks else "なし",
         "message": "OK"
     }
 
