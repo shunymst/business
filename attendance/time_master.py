@@ -12,8 +12,8 @@ def get_work_time(db_conn, request_json):
         request_json["employee_division"]
     )
 
-    sql = "select start_time, end_time from time_master where id = (select division2 from code_master where code = (%s)) and time_division = '1' "  # noqa
-    param = [work_division]
+    sql = "select start_time, end_time from time_master where id = (select division2 from code_master where class = (%s) and code = (%s)) and time_division = '1' "  # noqa
+    param = [code_master.CLASS_WORK_DIVISION, work_division]
     results = db_conn.select_dict(sql, param)
 
     if results and len(results) > 0:
@@ -30,8 +30,8 @@ def get_rest_time(db_conn, request_json):
         request_json["employee_division"]
     )
 
-    sql = "select start_time, end_time from time_master where id = (select division2 from code_master where code = (%s)) and time_division = '2' "  # noqa
-    param = [work_division]
+    sql = "select start_time, end_time from time_master where id = (select division2 from code_master where class = (%s) and code = (%s)) and time_division = '2' "  # noqa
+    param = [code_master.CLASS_WORK_DIVISION, work_division]
     results = db_conn.select_dict(sql, param)
 
     return results
