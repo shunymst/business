@@ -246,33 +246,8 @@ def format_number(number):
     else:
         return number
 
-# 時分フォーマット
-def format_hour_minute(minute):
-    return "{0:02d}".format(int(minute / 60)) + ":" + "{0:02d}".format(int(minute % 60))
 
-
-# TODO: 勤怠用utilつくる
-def create_time_json(start_time, end_time):
-    return {"start_time": start_time, "end_time": end_time}
-
-
-def convert_time_list(str_timelist):
-    dict_time_list = []
-    if str_timelist:
-        list_time = str_timelist.split(";")
-        for time_part in list_time:
-            if time_part:
-                dict_time_list.append(
-                    {
-                        "start_time": time_part[0: time_part.index("～")].split(" ")[1],
-                        "end_time": time_part[time_part.index("～") + 1: time_part.index("(")].split(" ")[1],
-                        "reason": time_part[time_part.index("(") + 1: len(time_part) - 1]
-                    }
-                )
-
-    return dict_time_list
-
-
+# 標準出力処理
 def print_stdout(text):
     sys.stdout.write(text)
     sys.stdout.write("\n")
