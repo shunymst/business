@@ -178,7 +178,7 @@ def attendance_concat():
 
     request_json = routing_util.get_request_param(request)
 
-    if request_json["list"]:
+    if request_json["list"] and request_json["list"] != "なし":
         send_content = {
             "list": request_json["list"] + ", " + request_json["value"]
         }
