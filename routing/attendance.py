@@ -39,6 +39,7 @@ def attendance_result_init():
     # request_json = routing_util.get_request_param(request)
 
     send_content = {
+        "remarks": "なし",
         "interruption_time": "なし",
         # "outside_work_time": "なし"
     }
@@ -103,7 +104,7 @@ def attendance_result_calc_time():
         "interruption_time": str_interruption_time,
         # "outside_work_time": str_outside_work_time,
         "over_time": str_over_time,
-        "delay_early_flag": delay_flag or early_flag,
+        "delay_early_flag": "1" if delay_flag or early_flag else "0",
         "message": "OK"
     }
 
