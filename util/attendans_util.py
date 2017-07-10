@@ -80,7 +80,10 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, inte
     if holiday_flag:
         total_over_time_minute = work_time_minute
     else:
+        print(work_time)
+        print(work_time_list)
         total_over_time_minute = calc_work_time_and_interruption_time(dt_start_time, work_time_list, [work_time])  # noqa
+        print(work_time_list)
 
     # return work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_outside_work_time_minute
     return work_time_minute, total_rest_time_minute, total_interruption_time_minute, total_over_time_minute
