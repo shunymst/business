@@ -74,6 +74,7 @@ def get_minute_work_rest_time(str_start_time, str_end_time, rest_time_list, inte
     work_time_minute = int(diff_time.total_seconds() / 60) - total_rest_time_minute - total_interruption_time_minute
 
     # 残業時間計算
+    print(holiday_flag)
     if holiday_flag:
         total_over_time_minute = work_time_minute
     else:
