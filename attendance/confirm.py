@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+import copy
 from util import common_module
 from attendance import code_master
 from attendance import interruption
@@ -203,7 +204,8 @@ def overtime_chack(over_time):
     return "安全"
 
 
-def convert_string(dic):
+def convert_string(send_results):
+    dic = copy.deepcopy(send_results)
     for k in dic:
         if isinstance(dic[k], datetime.datetime) or \
                 isinstance(dic[k], datetime.time) or isinstance(dic[k], datetime.timedelta):
