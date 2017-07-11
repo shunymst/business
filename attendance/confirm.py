@@ -161,7 +161,7 @@ from
     on u.id = r.user_id 
 where
   r.user_id = (%s)
-  and r.attendance_date = to_date((%s)', 'YYYY/MM/DD') 
+  and r.attendance_date = to_date((%s), 'YYYY/MM/DD') 
 group by
   r.results_division
   , u.name
