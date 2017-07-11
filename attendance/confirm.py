@@ -183,7 +183,7 @@ group by
 
     send_content = {}
     if results and len(results) > 0:
-        send_content["results"] = convert_string(results[0])
+        send_content["results"] = convert_date_to_string(results[0])
         send_content["message"] = "OK"
         send_content["sum_work_time"] = overtime_chack(results[0]["sum_work_time"])
         send_content["sum_over_time"] = overtime_chack(results[0]["sum_over_time"])
@@ -204,11 +204,11 @@ def overtime_chack(over_time):
     return "安全"
 
 
-def convert_string(send_results):
+def convert_date_to_string(send_results):
     dic = copy.deepcopy(send_results)
     for k in dic:
         common_module.print_stdout(type(dic[k]))
-        if isinstance(dic[k], datetime.datetime) or \
+        if isinstance(dic[k], datetime.date) or \
                 isinstance(dic[k], datetime.time) or isinstance(dic[k], datetime.timedelta):
             common_module.print_stdout(1)
             dic[k] = str(dic[k])
