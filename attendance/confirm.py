@@ -207,8 +207,10 @@ def overtime_chack(over_time):
 def convert_string(send_results):
     dic = copy.deepcopy(send_results)
     for k in dic:
+        common_module.print_stdout(type(dic[k]))
         if isinstance(dic[k], datetime.datetime) or \
                 isinstance(dic[k], datetime.time) or isinstance(dic[k], datetime.timedelta):
+            common_module.print_stdout(1)
             dic[k] = str(dic[k])
 
     return dic
