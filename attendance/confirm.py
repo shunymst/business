@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+from util import common_module
 from attendance import code_master
 from attendance import interruption
 
@@ -181,7 +182,7 @@ group by
 
     send_content = {}
     if results and len(results) > 0:
-        send_content["results"] = results[0]
+        # send_content["results"] = results[0]
         send_content["message"] = "OK"
         send_content["sum_work_time"] = overtime_chack(results[0]["sum_work_time"])
         send_content["sum_over_time"] = overtime_chack(results[0]["sum_over_time"])
@@ -192,7 +193,7 @@ group by
 
 
 def overtime_chack(over_time):
-    print(over_time)
+    common_module.print_stdout(over_time)
     if (over_time > datetime.timedelta(hours=35)) and (over_time < datetime.timedelta(hours=40)):
         return "[警告]"
     elif over_time >= datetime.timedelta(hours=40):
