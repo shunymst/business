@@ -182,11 +182,11 @@ group by
 
     send_content = {}
     if results and len(results) > 0:
-        # send_content["results"] = results[0]
+        send_content["results"] = convert_string(results[0])
         send_content["message"] = "OK"
         send_content["sum_work_time"] = overtime_chack(results[0]["sum_work_time"])
         send_content["sum_over_time"] = overtime_chack(results[0]["sum_over_time"])
-        send_content["start_time"] = results[0]["start_time"]
+        send_content["start_time"] = str(results[0]["start_time"])
     else:
         send_content["message"] = 'なし'
 
@@ -201,3 +201,12 @@ def overtime_chack(over_time):
         return "[超過]"
 
     return "安全"
+
+
+def convert_string(dic):
+    for k in dic:
+        if isinstance(dic[k], datetime.datetime) or \
+                isinstance(dic[k], datetime.time) or isinstance(dic[k], datetime.timedelta):
+            dic[k] = str(dic[k])
+
+    return dic
