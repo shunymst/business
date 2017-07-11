@@ -185,9 +185,8 @@ group by
     if results and len(results) > 0:
         send_content["results"] = convert_date_to_string(results[0])
         send_content["message"] = "OK"
-        send_content["sum_work_time"] = overtime_chack(results[0]["sum_work_time"])
-        send_content["sum_over_time"] = overtime_chack(results[0]["sum_over_time"])
-        send_content["start_time"] = str(results[0]["start_time"])
+        send_content["resuls_warnimg"] = overtime_chack(results[0]["sum_over_time"])
+        send_content["prospects_warnimg"] = overtime_chack(results[0]["prospects_over_time"])
     else:
         send_content["message"] = 'なし'
 
@@ -201,7 +200,7 @@ def overtime_chack(over_time):
     elif over_time >= datetime.timedelta(hours=40):
         return "[超過]"
 
-    return "安全"
+    return ""
 
 
 def convert_date_to_string(send_results):
