@@ -174,7 +174,7 @@ group by
         """
     param = [
         request_json["user_id"],
-        request_json["attedance_date"]
+        request_json["attendance_date"]
     ]
     results = db_conn.select_dict(sql, param)
 
