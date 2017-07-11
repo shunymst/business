@@ -138,8 +138,8 @@ from
   inner join (
    select user_id,sum(work_time) as sum_work_time,sum(over_time) as sum_over_time
    from results
-   where user_id = '003'
-   and attendance_date between date_trunc('month', attendance_date) and date_trunc('month', attendance_date)
+   where user_id = (%s)
+   and attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and date_trunc('month', to_date((%s), 'YYYY/MM/DD'))
      + '1 month' + '-1 Day'
      group by user_id
    ) r_total
@@ -160,8 +160,8 @@ from
   inner join users u 
     on u.id = r.user_id 
 where
-  r.user_id = '003'
-  and r.attendance_date = to_date('2017/07/15', 'YYYY/MM/DD') 
+  r.user_id = (%s)
+  and r.attendance_date = to_date((%s)', 'YYYY/MM/DD') 
 group by
   r.results_division
   , u.name
@@ -176,6 +176,10 @@ group by
   , r_total.sum_over_time;  
         """
     param = [
+
+        request_json["attendance_date"],
+        request_json["attendance_date"],
+        request_json["attendance_date"],
         request_json["user_id"],
         request_json["attendance_date"]
     ]
