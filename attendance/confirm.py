@@ -208,8 +208,9 @@ def convert_date_to_string(send_results):
     dic = copy.deepcopy(send_results)
     for k in dic:
         common_module.print_stdout(type(dic[k]))
-        if isinstance(dic[k], datetime.date) or \
-                isinstance(dic[k], datetime.time) or isinstance(dic[k], datetime.timedelta):
+        if isinstance(dic[k], datetime.timedelta):
+            dic[k] = common_module.format_hour_minute(int(dic[k].total_seconds() / 60))
+        elif isinstance(dic[k], datetime.date) or isinstance(dic[k], datetime.time):
             common_module.print_stdout(1)
             dic[k] = str(dic[k])
 
