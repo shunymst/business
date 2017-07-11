@@ -25,11 +25,12 @@ def check_result(db_conn, request_json):
         if results[0]["results_division"] == "1":
             work_time = "勤務時間：{}～{}".format(str(result["start_time"]), str(result["end_time"]))
         else:
-            work_time = code_master.get_code_name(
+            holiday_reason = code_master.get_code_name(
                 db_conn,
-                code_master.CLASS_HOLIDAY_DIVISION,
-                result["holiday_division"]
+                code_master.CLASS_HOLIDAY_REASON,
+                result["holiday_reason"]
             )
+            work_time = "休暇事由：" + holiday_reason
 
         remarks = result["remarks"]
 
