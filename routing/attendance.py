@@ -9,6 +9,7 @@ from attendance import results
 from attendance import time_master
 from attendance import users
 from attendance import calendar
+from attendance import confirm
 
 
 # ユーザー情報取得
@@ -215,3 +216,13 @@ def attendance_concat():
         }
 
     return routing_util.create_result_json(send_content)
+
+
+# 勤怠実績照会
+@app.route("/attendance/confilm/details", methods=["GET", "POST"])
+def attendance_details():
+
+    request_json = routing_util.get_request_param(request)
+    code_list = confirm.work_confirm(g_db_conn, request_json)
+
+    return routing_util.create_result_json(code_list)
