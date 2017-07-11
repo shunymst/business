@@ -247,7 +247,23 @@ def format_number(number):
         return number
 
 
-# 標準出力処理
+# 時分フォーマット
+def format_hour_minute(minute):
+    return "{0:02d}".format(int(minute / 60)) + ":" + "{0:02d}".format(int(minute % 60))
+
+
+# datetime変換
+def convert_datetime(str_dt, str_format="%Y/%m/%d %H:%M:%S"):
+    return datetime.datetime.strptime(str_dt, str_format)
+
+
+# time変換
+def convert_time(str_dt, str_format="%H:%M:%S"):
+    dt = convert_datetime(str_dt, str_format)
+    return datetime.time(dt.hour, dt.minute, dt.second, dt.microsecond)
+
+
+# 標準出力処理(printではSupervisorログに出力されない為)
 def print_stdout(text):
     sys.stdout.write(text)
     sys.stdout.write("\n")
