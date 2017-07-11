@@ -131,8 +131,8 @@ def work_confirm(db_conn, request_json):
   , r.remarks
   , r_total.sum_work_time
   , r_total.sum_over_time
-  , r_total.sum_work_time + SUM(p.work_time) as "予定作業時間"
-  , r_total.sum_over_time + SUM(p.over_time) as "予定時間外"
+  , r_total.sum_work_time + SUM(p.work_time) as prospects_work_time
+  , r_total.sum_over_time + SUM(p.over_time) as prospects_over_time
 from
   results r 
   inner join (
