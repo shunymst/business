@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import datetime
 from attendance import code_master
 from attendance import interruption
 
@@ -133,10 +134,10 @@ def work_confirm(db_conn, request_json):
 from
   results r 
   inner join (
-  	select user_id,sum(work_time) as sum_work_time,sum(over_time) as sum_over_time
-  	from results
-  	where user_id = '003'
-  	and attendance_date between date_trunc('month', attendance_date) and date_trunc('month', attendance_date)
+   select user_id,sum(work_time) as sum_work_time,sum(over_time) as sum_over_time
+   from results
+   where user_id = '003'
+   and attendance_date between date_trunc('month', attendance_date) and date_trunc('month', attendance_date)
      + '1 month' + '-1 Day'
      group by user_id
    ) r_total
@@ -191,9 +192,10 @@ group by
 
 
 def overtime_chack(over_time):
-    if over_time > "35:00:00" and over_time < "40:00:00":
+    print(over_time)
+    if (over_time > datetime.timedelta(hours=35)) and (over_time < datetime.timedelta(hours=40)):
         return "[警告]"
-        if over_time >= "40:00:00":
-            return "[超過]"
+    elif over_time >= datetime.timedelta(hours=40):
+        return "[超過]"
 
     return "安全"
