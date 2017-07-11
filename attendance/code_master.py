@@ -51,7 +51,7 @@ def change_code_by_name(db_conn, class_code, code_name, division1=None):
 
 def get_code_name(db_conn, class_code, code):
 
-    sql = "select code_name from code_master where class = (%s) and code_name = (%s)"
+    sql = "select code_name from code_master where class = (%s) and code = (%s)"
     param = [class_code, code]
 
     results = db_conn.select_dict(sql, param)
