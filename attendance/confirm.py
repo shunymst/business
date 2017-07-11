@@ -185,8 +185,8 @@ group by
     if results and len(results) > 0:
         send_content["results"] = convert_date_to_string(results[0])
         send_content["message"] = "OK"
-        send_content["resuls_warnimg"] = overtime_chack(results[0]["sum_over_time"])
-        send_content["prospects_warnimg"] = overtime_chack(results[0]["prospects_over_time"])
+        send_content["results_warning"] = overtime_chack(results[0]["sum_over_time"])
+        send_content["prospects_warning"] = overtime_chack(results[0]["prospects_over_time"])
     else:
         send_content["message"] = 'なし'
 
