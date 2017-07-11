@@ -265,6 +265,6 @@ def convert_time(str_dt, str_format="%H:%M:%S"):
 
 # 標準出力処理(printではSupervisorログに出力されない為)
 def print_stdout(text):
-    sys.stdout.write(text)
+    sys.stdout.write(str(text))
     sys.stdout.write("\n")
     sys.stdout.flush()
