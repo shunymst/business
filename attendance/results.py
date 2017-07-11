@@ -23,7 +23,7 @@ def check_result(db_conn, request_json):
             status = "承認待ち"
 
         if results[0]["results_division"] == "1":
-            work_time = "{}～{}".format(str(result["start_time"]), str(result["end_time"]))
+            work_time = "勤務時間：{}～{}".format(str(result["start_time"]), str(result["end_time"]))
         else:
             work_time = code_master.get_code_name(
                 db_conn,
@@ -75,7 +75,7 @@ def insert_work(db_conn, request_json):
 
 
 def insert_holiday(db_conn, request_json):
-    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '2', null, null, null, null, null, null, (%s), (%s), (%s), null) "  # noqa
+    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '2', null, null, null, null, null, null, null, (%s), (%s), (%s), null) "  # noqa
 
     # コード変換
     holiday_division = code_master.change_code_by_name(
