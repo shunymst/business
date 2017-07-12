@@ -201,3 +201,7 @@ def header_confirm():
     # ヘッダ情報出力
     for r_key in request.headers.keys():
         common_module.print_stdout(r_key + "={}".format(request.headers[r_key]))
+
+    send_content = {"message": "OK"}
+
+    return create_result_json(send_content)
