@@ -276,3 +276,10 @@ def format_date(dt, s_format="%Y-%m-%d"):
         return ""
 
     return datetime.date.strftime(dt, s_format)
+
+
+def format_time(ds, s_format="%H:%M:%S"):
+    if not ds:
+        return ""
+
+    return datetime.time.strftime(ds, s_format)
