@@ -218,9 +218,19 @@ def attendance_concat():
     return routing_util.create_result_json(send_content)
 
 
-# 勤怠実績照会
+# 勤怠実績明細
 @app.route("/attendance/confilm/details", methods=["GET", "POST"])
 def attendance_details():
+
+    request_json = routing_util.get_request_param(request)
+    code_list = confirm.work_confirm(g_db_conn, request_json)
+
+    return routing_util.create_result_json(code_list)
+
+
+# 勤怠予定照会
+@app.route("/attendance/confilm/plans_work", methods=["GET", "POST"])
+def attendance_plans_work():
 
     request_json = routing_util.get_request_param(request)
     code_list = confirm.work_confirm(g_db_conn, request_json)

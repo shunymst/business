@@ -117,6 +117,7 @@ def delete(db_conn, request_json):
     return "OK"
 
 
+# 勤怠実績明細シナリオ
 def work_confirm(db_conn, request_json):
     sql = """
       select
@@ -173,7 +174,7 @@ group by
   , r.holiday_reason
   , r.remarks
   , r_total.sum_work_time
-  , r_total.sum_over_time;  
+  , r_total.sum_over_time  
         """
     param = [
         request_json["user_id"],
@@ -196,6 +197,7 @@ group by
     return send_content
 
 
+# 残業超過判断
 def overtime_chack(over_time):
     common_module.print_stdout(over_time)
     if (over_time > datetime.timedelta(hours=35)) and (over_time < datetime.timedelta(hours=40)):
@@ -206,6 +208,7 @@ def overtime_chack(over_time):
     return ""
 
 
+# データ型変更
 def convert_date_to_string(send_results):
     dic = copy.deepcopy(send_results)
     for k in dic:
@@ -217,3 +220,53 @@ def convert_date_to_string(send_results):
             dic[k] = str(dic[k])
 
     return dic
+
+
+#勤怠予定照会
+def plans_work(db_conn, request_json):
+    sql = "select name from users where id = (%s)"
+
+    param = [
+        request_json['id']
+    ]
+    results = db_conn.select_dict(sql, param)
+
+    sql2 = """
+        select r.attendance_date, to_char(r.attendance_date, 'FMDD日') as date,(ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
+        r.results_division,r.start_time,r.end_time 
+        from result as r 
+        where user_id = (%s) and 
+        attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
+        date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day';
+        """
+
+    param2 = [
+        request_json['user_id'],
+        request_json['"attendance_date'],
+        request_json['"attendance_date']
+    ]
+    results2 = db_conn.select_dict(sql2, param2)
+
+    sql3 = """
+        select p.user_id,SUM(p.work_time) as "prospects_work_time",SUM(p.over_time) as "prospects_over_time" 
+        from plans as p 
+        where p.user_id = (%s) and p.attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
+        date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day' group by p.user_id;
+        """
+    param3 = [
+        request_json['user_id'],
+        request_json['"attendance_date'],
+        request_json['"attendance_date']
+    ]
+    results3 = db_conn.select_dict(sql3, param3)
+
+    send_content = {}
+
+    if (results and len(results) > 0) and (results2 and len(results2) > 0) and (results3 and len(results3) > 0):
+        send_content["results"] = convert_date_to_string(results[0])
+        send_content["results2"] = convert_date_to_string(results2[0])
+        send_content["results3"] = convert_date_to_string(results3[0])
+        send_content["message"] = "OK"
+
+
+    return send_content
