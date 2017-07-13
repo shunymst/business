@@ -140,7 +140,8 @@ from
    select user_id,sum(work_time) as sum_work_time,sum(over_time) as sum_over_time
    from results
    where user_id = (%s)
-   and attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and date_trunc('month', to_date((%s), 'YYYY/MM/DD'))
+   and attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
+   date_trunc('month', to_date((%s), 'YYYY/MM/DD'))
      + '1 month' + '-1 Day'
      group by user_id
    ) r_total
@@ -148,12 +149,13 @@ from
      
   left outer join plans p 
     on r.user_id = p.user_id 
-              and p.attendance_date between date_trunc('month', r.attendance_date) and date_trunc('month', r.attendance_date) + '1 month' + '-1 Day' 
+              and p.attendance_date between date_trunc('month', r.attendance_date) and 
+              date_trunc('month', r.attendance_date) + '1 month' + '-1 Day' 
     and not exists ( 
       select
         * 
       from
-        results 
+        results
       where
         user_id = p.user_id 
         and attendance_date =p.attendance_date 
@@ -222,23 +224,86 @@ def convert_date_to_string(send_results):
     return dic
 
 
-#勤怠予定照会
+# 勤怠実績照会
 def plans_work(db_conn, request_json):
-    sql = "select name from users where id = (%s)"
 
+    sql = """
+        select
+  u.name
+  , r.results_division
+  , r.attendance_date
+  , r.start_time
+  , r.end_time
+  , r.work_time
+  , r.holiday_division
+  , r.holiday_reason
+  , r.remarks
+  , r_total.sum_work_time
+  , r_total.sum_over_time
+  , r_total.sum_work_time + SUM(p.work_time) as prospects_work_time
+  , r_total.sum_over_time + SUM(p.over_time) as prospects_over_time
+    from
+    results r 
+    inner join (
+   select user_id,sum(work_time) as sum_work_time,sum(over_time) as sum_over_time
+   from results
+   where user_id = (%s)
+   and attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
+   date_trunc('month', to_date((%s), 'YYYY/MM/DD'))
+     + '1 month' + '-1 Day'
+     group by user_id
+   ) r_total
+   on r.user_id = r_total.user_id
+     
+    left outer join plans p 
+    on r.user_id = p.user_id 
+              and p.attendance_date between date_trunc('month', r.attendance_date) and 
+              date_trunc('month', r.attendance_date) + '1 month' + '-1 Day' 
+    and not exists ( 
+      select
+        * 
+      from
+        results
+      where
+        user_id = p.user_id 
+        and attendance_date =p.attendance_date 
+    ) 
+    inner join users u 
+    on u.id = r.user_id 
+    where
+    r.user_id = (%s)
+    and r.attendance_date = to_date((%s), 'YYYY/MM/DD') 
+    group by
+  r.results_division
+  , u.name
+  , r.attendance_date
+  , r.start_time
+  , r.end_time
+  , r.work_time
+  , r.holiday_division
+  , r.holiday_reason
+  , r.remarks
+  , r_total.sum_work_time
+  , r_total.sum_over_time  
+        """
     param = [
-        request_json['id']
+        request_json["user_id"],
+        request_json["attendance_date"],
+        request_json["attendance_date"],
+        request_json["user_id"],
+        request_json["attendance_date"]
     ]
     results = db_conn.select_dict(sql, param)
 
     sql2 = """
-        select r.attendance_date, to_char(r.attendance_date, 'FMDD日') as date,(ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
-        r.results_division,r.start_time,r.end_time 
-        from result as r 
-        where user_id = (%s) and 
-        attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
-        date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day';
-        """
+            select r.attendance_date, to_char(r.attendance_date, 'FMDD日') 
+            as date,(ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
+            r.results_division,r.start_time,r.end_time 
+            from result as r 
+            where user_id = (%s) and 
+            attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
+            date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day';
+            """
 
     param2 = [
         request_json['user_id'],
@@ -247,26 +312,11 @@ def plans_work(db_conn, request_json):
     ]
     results2 = db_conn.select_dict(sql2, param2)
 
-    sql3 = """
-        select p.user_id,SUM(p.work_time) as "prospects_work_time",SUM(p.over_time) as "prospects_over_time" 
-        from plans as p 
-        where p.user_id = (%s) and p.attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
-        date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day' group by p.user_id;
-        """
-    param3 = [
-        request_json['user_id'],
-        request_json['"attendance_date'],
-        request_json['"attendance_date']
-    ]
-    results3 = db_conn.select_dict(sql3, param3)
-
     send_content = {}
 
-    if (results and len(results) > 0) and (results2 and len(results2) > 0) and (results3 and len(results3) > 0):
+    if (results and len(results) > 0) and (results2 and len(results2) > 0):
         send_content["results"] = convert_date_to_string(results[0])
         send_content["results2"] = convert_date_to_string(results2[0])
-        send_content["results3"] = convert_date_to_string(results3[0])
         send_content["message"] = "OK"
-
 
     return send_content
