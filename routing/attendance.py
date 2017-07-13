@@ -233,6 +233,6 @@ def attendance_details():
 def attendance_plans_work():
 
     request_json = routing_util.get_request_param(request)
-    code_list = confirm.work_confirm(g_db_conn, request_json)
+    code_list = confirm.plans_work(g_db_conn, request_json)
 
     return routing_util.create_result_json(code_list)
