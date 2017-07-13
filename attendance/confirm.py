@@ -299,7 +299,7 @@ def plans_work(db_conn, request_json):
             select r.attendance_date, to_char(r.attendance_date, 'FMDD日') 
             as date,(ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
             r.results_division,r.start_time,r.end_time 
-            from result as r 
+            from results r 
             where user_id = (%s) and 
             attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
             date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day';
