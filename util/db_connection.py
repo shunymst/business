@@ -3,6 +3,7 @@
 # 新規ファイル
 import psycopg2
 import psycopg2.extras
+from util import common_module
 
 
 # DB接続クラス
@@ -57,7 +58,8 @@ class DBConn(object):
     # 参照系 SQL実行(カラム名のdict型で返却)
     def select_dict(self, sql, params=None):
         try:
-
+            common_module.print_stdout(sql)
+            common_module.print_stdout(params)
             # Dictに格納 fetchall不可、順序保持不可
             # カーソル取得
             dict_cur = self.__conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
