@@ -319,7 +319,7 @@ def plans_work(db_conn, request_json):
         send_content["results"] = convert_date_to_string(results[0])
         send_content["results2"] = convert_date_to_string(results2[0])
         for plan_rec in results2:
-            plan_list += plan_rec["attendance_date" + "dow" + "start_time" + "～" + "end_time"] + "\n"
+            plan_list += plan_rec["attendance_date" + "dow" + "start_time" + "～" + "end_time" + "\n"]
         send_content["message"] = "OK"
 
     return send_content,plan_list
