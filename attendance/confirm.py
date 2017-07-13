@@ -320,7 +320,7 @@ def plans_work(db_conn, request_json):
         send_content["results"] = convert_date_to_string(results[0])
         #send_content["results2"] = convert_date_to_string(results2[0])
         for plan_rec in results2:
-            plan_list += common_module.format_date(plan_rec["attendance_date"], "%日") + "(" + plan_rec["dow"] + ")" + \
+            plan_list += common_module.format_date(plan_rec["attendance_date"], "%d日") + "(" + plan_rec["dow"] + ")" + \
                                   common_module.format_time(plan_rec["start_time"], "%H:%M") + "～" + common_module.format_time(plan_rec["end_time"], "%H:%M") + "\n"
         send_content["result2"] = plan_list
         send_content["message"] = "OK"
