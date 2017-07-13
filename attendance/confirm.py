@@ -313,10 +313,13 @@ def plans_work(db_conn, request_json):
     results2 = db_conn.select_dict(sql2, param2)
 
     send_content = {}
+    plan_list = ""
 
     if (results and len(results) > 0) and (results2 and len(results2) > 0):
         send_content["results"] = convert_date_to_string(results[0])
         send_content["results2"] = convert_date_to_string(results2[0])
+        for plan_rec in results2:
+            plan_list += plan_rec["attendance_date" + "dow" + "start_time" + "～" + "end_time"] + "\n"
         send_content["message"] = "OK"
 
-    return send_content
+    return send_content,plan_list
