@@ -306,9 +306,9 @@ def plans_work(db_conn, request_json):
             """
 
     param2 = [
-        request_json['user_id'],
-        request_json['"attendance_date'],
-        request_json['"attendance_date']
+        request_json["user_id"],
+        request_json["attendance_date"],
+        request_json["attendance_date"]
     ]
     results2 = db_conn.select_dict(sql2, param2)
 
