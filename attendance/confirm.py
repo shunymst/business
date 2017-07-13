@@ -319,8 +319,8 @@ def plans_work(db_conn, request_json):
         send_content["results"] = convert_date_to_string(results[0])
         #send_content["results2"] = convert_date_to_string(results2[0])
         for plan_rec in results2:
-            plan_list += plan_rec[common_module.format_date("attendance_date", "%d") + "dow" +
-                                  common_module.format_date("start_time", "%d") + "～" + common_module.format_date("end_time", "%d") + "\n"]
+            plan_list += common_module.format_date(plan_rec["attendance_date"], "%d") + plan_rec["dow"] + \
+                                  common_module.format_date(plan_rec["start_time"], "%d") + "～" + common_module.format_date(plan_rec["end_time"], "%d") + "\n"
         send_content["result2"] = plan_list
         send_content["message"] = "OK"
 

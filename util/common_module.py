@@ -272,4 +272,7 @@ def print_stdout(text):
 
 # ライン表示用書式変換処理
 def format_date(dt, s_format="%Y-%m-%d"):
+    if not dt:
+        return ""
+
     return datetime.date.strftime(dt, s_format)
