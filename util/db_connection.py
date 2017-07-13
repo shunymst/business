@@ -58,7 +58,9 @@ class DBConn(object):
     # 参照系 SQL実行(カラム名のdict型で返却)
     def select_dict(self, sql, params=None):
         try:
+            common_module.print_stdout("---------------SQL---------------")
             common_module.print_stdout(sql)
+            common_module.print_stdout("---------------PARAM---------------")
             common_module.print_stdout(params)
             # Dictに格納 fetchall不可、順序保持不可
             # カーソル取得
@@ -75,6 +77,9 @@ class DBConn(object):
 
             # カーソル破棄
             dict_cur.close()
+
+            common_module.print_stdout("---------------COUNT---------------")
+            common_module.print_stdout(len(result))
 
             return result
 
