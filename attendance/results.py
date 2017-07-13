@@ -5,15 +5,16 @@ from attendance import interruption
 
 
 def check_result(db_conn, request_json):
-    sql = "select attendance_date, results_division, status, start_time, end_time, holiday_division, remarks from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "  # noqa
+    sql = "select attendance_date, results_division, status, work_division, start_time, end_time, holiday_division, holiday_reason, remarks from results where user_id = (%s) and attendance_date = to_date((%s), 'yyyy/mm/dd') "  # noqa
     param = [
         request_json["user_id"],
         request_json["attendance_date"]
     ]
     results = db_conn.select_dict(sql, param)
     status = "未登録"
-    work_time = None
-    remarks = None
+    division = ""
+    work_time = ""
+    remarks = ""
 
     if results and len(results) > 0:
         result = results[0]
@@ -23,18 +24,34 @@ def check_result(db_conn, request_json):
             status = "承認待ち"
 
         if results[0]["results_division"] == "1":
+            work_division = code_master.get_code_name(
+                db_conn,
+                code_master.CLASS_WORK_DIVISION,
+                result["work_division"]
+            )
+            division = "勤務区分：{}".format(work_division)
+
             work_time = "勤務時間：{}～{}".format(str(result["start_time"]), str(result["end_time"]))
         else:
-            work_time = code_master.get_code_name(
+            holiday_division = code_master.get_code_name(
                 db_conn,
                 code_master.CLASS_HOLIDAY_DIVISION,
                 result["holiday_division"]
             )
+            division = "休暇区分：{}".format(holiday_division)
+
+            holiday_reason = code_master.get_code_name(
+                db_conn,
+                code_master.CLASS_HOLIDAY_REASON,
+                result["holiday_reason"]
+            )
+            work_time = "休暇事由：{}".format(holiday_reason)
 
         remarks = result["remarks"]
 
     return_result = {
         "status": status,
+        "division": division if division else "なし",
         "work_time": work_time if work_time else "なし",
         "remarks": remarks if remarks else "なし",
         "interruption_time": "なし",

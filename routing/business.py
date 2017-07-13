@@ -6,6 +6,7 @@ import json
 import os
 import copy
 from routing import app
+from util import common_module
 
 
 @app.route("/file", methods=["GET", "POST"])
@@ -191,5 +192,16 @@ def list_append():
         send_content = {
             "list": request_json["value"]
         }
+
+    return create_result_json(send_content)
+
+
+@app.route("/header_confirm", methods=["GET", "POST"])
+def header_confirm():
+    # ヘッダ情報出力
+    for r_key in request.headers.keys():
+        common_module.print_stdout(r_key + "={}".format(request.headers[r_key]))
+
+    send_content = {"message": "OK"}
 
     return create_result_json(send_content)
