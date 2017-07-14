@@ -26,13 +26,8 @@ def get_detail(db_conn, request_json):
         "user_id": request_json["003"],
         "password": request_json["a"]
     }
-    send_content = {}
     user_info = db_conn.select_dict(sql, param)
-    send_content["list"] = user_info[0]
-    send_content["message"] = "No"
-    if send_content[list] and len(send_content[list]) > 0:
-        send_content["message"] = "OK"
 
-    return send_content
+    return user_info
 
 
