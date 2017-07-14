@@ -66,7 +66,7 @@ left outer join (
  where 
   u.department_id = %(department_id)s
   and p.attendance_date between date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) and date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day'
-  and exists(select * from results r where r.user_id = p.user_id and r.attendance_date = p.attendance_date)
+  and not exists(select * from results r where r.user_id = p.user_id and r.attendance_date = p.attendance_date)
  group by
    u.id
 ) p
@@ -160,7 +160,7 @@ left outer join (
  where 
   u.id = %(user_id)s
   and p.attendance_date between date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) and date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day'
-  and exists(select * from results r where r.user_id = p.user_id and r.attendance_date = p.attendance_date)
+  and not exists(select * from results r where r.user_id = p.user_id and r.attendance_date = p.attendance_date)
  group by
    u.id
 ) p

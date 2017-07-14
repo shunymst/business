@@ -155,10 +155,10 @@ select
   , remarks
   , approver_id
 from
-  results r 
+  results 
 where
-  r.user_id = %(user_id)s 
-  and r.attendance_date = %(attendance_date)s
+  user_id = %(user_id)s 
+  and attendance_date = %(attendance_date)s
 """
 
     dt_attendance_date = common_module.convert_date(attendance_date)
@@ -208,10 +208,11 @@ group by
 
 
 # 月別実績取得処理（部門）
-def get_monthly_results_of_department(db_conn, user_id, base_date):
+def get_monthly_results_of_department(db_conn, department_id, base_date):
     sql = """
 select
   r.department_id
+  , count(distinct r.id) as user_count
   , sum(r.work_time) as work_time
   , sum(r.over_time) as over_time 
   , sum(case when c.holiday_flag = '1' then 1 else 0 end) holiday_work_count
@@ -230,15 +231,15 @@ inner join
   on cm.class = %(class_work_division)s
   and cm.code = r.work_division
 where
-  u.department_id = %(user_id)s 
+  u.department_id = %(department_id)s 
   and r.attendance_date between %(attendance_date_start)s and %(attendance_date_end)s
 group by
-  r.user_id
+  r.department_id
 """
 
     dt_base_date = common_module.convert_date(base_date)
     param = {
-        "user_id": user_id,
+        "department_id": department_id,
         "attendance_date_start": common_module.get_first_day(dt_base_date),
         "attendance_date_end": common_module.get_last_day(dt_base_date),
         "class_work_division": code_master.CLASS_WORK_DIVISION
