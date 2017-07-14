@@ -228,6 +228,16 @@ def attendance_details():
     return routing_util.create_result_json(code_list)
 
 
+# 勤怠実績照会
+@app.route("/attendance/confilm/plans_inquiry", methods=["GET", "POST"])
+def attendance_plans_inquiry():
+
+    request_json = routing_util.get_request_param(request)
+    code_list = confirm.plans_inquiry(g_db_conn, request_json)
+
+    return routing_util.create_result_json(code_list)
+
+
 # 勤怠予定照会
 @app.route("/attendance/confilm/plans_work", methods=["GET", "POST"])
 def attendance_plans_work():

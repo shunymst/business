@@ -225,7 +225,7 @@ def convert_date_to_string(send_results):
 
 
 # 勤怠実績照会
-def plans_work(db_conn, request_json):
+def plans_inquiry(db_conn, request_json):
 
     sql = """
         select
@@ -303,7 +303,7 @@ def plans_work(db_conn, request_json):
             where user_id = (%s) and 
             attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
             date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day'
-            order by r.attendance_date;
+            order by r.attendance_date
             """
 
     param2 = [
@@ -323,6 +323,44 @@ def plans_work(db_conn, request_json):
             plan_list += common_module.format_date(plan_rec["attendance_date"], "%d日") + "(" + plan_rec["dow"] + ")" + \
                                   common_module.format_time(plan_rec["start_time"], "%H:%M") + "～" + common_module.format_time(plan_rec["end_time"], "%H:%M") + "\n"
         send_content["result2"] = plan_list
+        send_content["message"] = "OK"
+
+    return send_content
+
+
+# 勤怠予定照会
+def plans_work(db_conn, request_json):
+    sql = """
+        select r.attendance_date, to_char(r.attendance_date, 'FMDD日') as date,
+        date_trunc('month', to_date((%s), 'YYYY/MM/DD')) as first_day,
+        date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day' as last_day,
+        ,(ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
+        r.results_division,r.start_time,r.end_time 
+        from results r 
+        where user_id = (%s) and 
+        attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
+        date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day'
+        order by r.attendance_date
+        """
+
+    param = [
+        request_json["attendance_date"],
+        request_json["attendance_date"],
+        request_json["user_id"],
+        request_json["attendance_date"],
+        request_json["attendance_date"],
+    ]
+    results = db_conn.select_dict(sql, param)
+    send_content = {}
+    plan_list = ""
+
+    if results and len(results):
+        send_content["results"] = convert_date_to_string(results[0])
+        for plan_rec in results:
+            plan_list += common_module.format_date(plan_rec["attendance_date"], "%d日") + "(" + plan_rec["dow"] + ")" + \
+                        common_module.format_time(plan_rec["start_time"], "%H:%M") + "～" + common_module.format_time(
+                        plan_rec["end_time"], "%H:%M") + "\n"
+        send_content["result"] = plan_list
         send_content["message"] = "OK"
 
     return send_content
