@@ -20,8 +20,8 @@ def get_detail(db_conn, request_json):
         (select code_name from code_master where class='0001' and code=users.employee_division) as employee_division_name  \
         , 'ＡＩサービス企画部' as department_name, 'ＡＩ企' as department_short_name 
         from users where id = %(user_id)s and password = %(password)s
-        and  enabled = 't'   # noqa
-        """
+        and  enabled = 't'  
+        """ # noqa
 
     param = {
         "user_id": request_json["user_id"],
