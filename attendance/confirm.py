@@ -68,18 +68,6 @@ from
 where
   r.user_id = %(user_id)s 
   and r.attendance_date = %(attendance_date)s
-group by
-  r.results_division
-  , u.name
-  , r.attendance_date
-  , r.start_time
-  , r.end_time
-  , r.work_time
-  , r.holiday_division
-  , r.holiday_reason
-  , r.remarks
-  , r_total.sum_work_time
-  , r_total.sum_over_time
 """
 
     dt_attendance_date = common_module.convert_date(attendance_date)
