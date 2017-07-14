@@ -3,6 +3,7 @@
 # 新規ファイル
 from util import db_connection
 from util import common_module
+import json
 
 
 def main():
@@ -14,5 +15,6 @@ if __name__ == "__main__":
     g_ini_def = common_module.read_ini("conf/environment.ini")["DEFAULT"]
     # DB Connection作成
     g_db_conn = db_connection.DBConn(g_ini_def["DB_CONNECTION_STR"])
+    resuls = g_db_conn.select_dict("select %(test)s, %(test2)s, %(test)s", {"test": "a", "test2": "b", })
 
-    common_module.print_stdout(g_db_conn.select_dict("select %(test)s, %(test2)s, %(test)s", {"test": "a", "test2": "b", }))
+    print(json.dumps(resuls, indent=4, separators=(",", ": "), ensure_ascii=False))
