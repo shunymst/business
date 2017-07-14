@@ -22,8 +22,8 @@ select
   , r.remarks
   , r_total.sum_work_time
   , r_total.sum_over_time
-  , coalesce(r_total.sum_work_time, interval '0') + SUM(p.work_time) as prospects_work_time
-  , coalesce(r_total.sum_over_time, interval '0') + SUM(p.over_time) as prospects_over_time 
+  , coalesce(r_total.sum_work_time, interval '0') + coalesce(p.sum_work_time, interval '0') as prospects_work_time
+  , coalesce(r_total.sum_over_time, interval '0') + coalesce(p.sum_over_time, interval '0') as prospects_over_time 
 from
   results r 
   inner join ( 
@@ -40,18 +40,29 @@ from
       user_id
   ) r_total 
     on r.user_id = r_total.user_id 
-  left outer join plans p 
+  left outer join ( 
+    select
+      user_id
+      , sum(work_time) as sum_work_time
+      , sum(over_time) as sum_over_time 
+    from
+      plans 
+    where
+      user_id = %(user_id)s 
+      and attendance_date between %(attendance_date_start)s and %(attendance_date_end)s
+      and not exists ( 
+        select
+          * 
+        from
+          results 
+        where
+          user_id = p.user_id 
+          and attendance_date = plans.attendance_date
+      ) 
+    group by
+      user_id
+  ) p
     on r.user_id = p.user_id 
-    and attendance_date between %(attendance_date_start)s and %(attendance_date_end)s
-    and not exists ( 
-      select
-        * 
-      from
-        results 
-      where
-        user_id = p.user_id 
-        and attendance_date = p.attendance_date
-    ) 
   inner join users u 
     on u.id = r.user_id 
 where
