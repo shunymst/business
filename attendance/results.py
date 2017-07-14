@@ -63,7 +63,7 @@ def check_result(db_conn, request_json):
 
 
 def insert_work(db_conn, request_json):
-    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '1', (%s), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), (%s), null, null, (%s), null) "  # noqa
+    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', (%s), '1', (%s), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'yyyy/mm/dd hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), to_timestamp((%s), 'hh24:mi:ss'), (%s), null, null, (%s), null) "  # noqa
 
     # 勤務区分コード変換
     work_division = code_master.change_code_by_name(
@@ -75,6 +75,7 @@ def insert_work(db_conn, request_json):
     param = [
         request_json["user_id"],
         request_json["attendance_date"],
+        request_json["employee_division"],
         work_division,
         request_json["start_time"],
         request_json["end_time"],
@@ -92,7 +93,7 @@ def insert_work(db_conn, request_json):
 
 
 def insert_holiday(db_conn, request_json):
-    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', '2', null, null, null, null, null, null, null, (%s), (%s), (%s), null) "  # noqa
+    sql = "insert into results values((%s), to_date((%s), 'yyyy/mm/dd'), '1', (%s), '2', null, null, null, null, null, null, null, (%s), (%s), (%s), null) "  # noqa
 
     # コード変換
     holiday_division = code_master.change_code_by_name(
@@ -109,6 +110,7 @@ def insert_holiday(db_conn, request_json):
     param = [
         request_json["user_id"],
         request_json["attendance_date"],
+        request_json["employee_division"],
         holiday_division,
         holiday_reason,
         request_json["remarks"]
