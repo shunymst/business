@@ -56,7 +56,7 @@ from
         from
           results 
         where
-          user_id = p.user_id 
+          user_id = plans.user_id 
           and attendance_date = plans.attendance_date
       ) 
     group by
