@@ -282,6 +282,9 @@ def format_date(date, s_format="%Y/%m/%d"):
     if not date:
         return ""
 
+    if isinstance(str, date):
+        date = convert_date(date, s_format)
+
     return datetime.date.strftime(date, s_format)
 
 
@@ -289,6 +292,9 @@ def format_date(date, s_format="%Y/%m/%d"):
 def format_time(time, s_format="%H:%M:%S"):
     if not time:
         return ""
+
+    if isinstance(str, time):
+        time = convert_time(time, s_format)
 
     return datetime.time.strftime(time, s_format)
 
@@ -298,26 +304,37 @@ def format_datetime(dt, s_format="%Y/%m/%d %H:%M:%S"):
     if not dt:
         return ""
 
+    if isinstance(str, datetime):
+        dt = convert_datetime(datetime, s_format)
+
     return datetime.datetime.strftime(dt, s_format)
 
 
 # 月初取得
 def get_first_day(dt):
+    if not dt:
+        return ""
     return dt - datetime.timedelta(days=dt.day-1)
 
 
 # 月末取得
 def get_last_day(dt):
+    if not dt:
+        return ""
     return dt + relativedelta(months=1) - datetime.timedelta(days=dt.day)
 
 
 # 文字列日付から月初取得
 def get_first_day_by_str_date(str_dt, s_format="%Y/%m/%d"):
+    if not str_dt:
+        return ""
     dt = convert_date(str_dt, s_format)
     return get_first_day(dt)
 
 
 # 文字列日付から月末取得
 def get_last_day_by_str_date(str_dt, s_format="%Y/%m/%d"):
+    if not str_dt:
+        return ""
     dt = convert_date(str_dt, s_format)
     return get_last_day(dt)

@@ -3,8 +3,8 @@
 import datetime
 import copy
 from util import common_module
-from attendance import code_master
-from attendance import interruption
+from attendance import users
+from attendance import department
 
 
 # 実績・見込取得処理（個人）
@@ -188,10 +188,6 @@ def plans_work(db_conn, request_json):
 
     sql_name = "select name from users where id = %(user_id)s"
 
-    # param_name = [
-    #    request_json["user_id"]
-    # ]
-
     param_name = {
         "user_id": request_json["user_id"]
     }
@@ -211,4 +207,19 @@ def plans_work(db_conn, request_json):
         send_content["results_list"] = plan_list
         send_content["message"] = "OK"
 
+    return send_content
+
+
+# 勤怠実績・見込照会(部門別)
+def results_department(db_conn, request_json):
+
+    user_info = users.get(db_conn, request_json)
+    department_short_name = department.get_short_name(db_conn, user_info["department_id"])
+
+    send_content = {
+        "info": {
+            "department_short_name": department_short_name,
+            "ym": common_module.format_date(common_module.convert_date(request_json["attendance_date"]), "MM月")
+        }
+    }
     return send_content
