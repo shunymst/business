@@ -336,8 +336,8 @@ def plans_inquiry(db_conn, request_json):
 def plans_work(db_conn, request_json):
     sql = """
         select p.attendance_date, to_char(p.attendance_date, 'FMDD日') as date,
-        date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) as first_day,
-        date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day' as last_day,
+        date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) first_day,
+        date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day' last_day,
         (ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
         p.results_division,p.start_time,p.end_time
         from plans p 
