@@ -14,6 +14,7 @@ from logging import getLogger, handlers, StreamHandler, DEBUG, INFO, WARN, WARNI
 from collections import OrderedDict
 from functools import partial
 import math
+from dateutil.relativedelta import relativedelta
 
 
 # INIファイル読込
@@ -247,14 +248,22 @@ def format_number(number):
         return number
 
 
+# 標準出力処理(printではSupervisorログに出力されない為)
+def print_stdout(text):
+    sys.stdout.write(str(text))
+    sys.stdout.write("\n")
+    sys.stdout.flush()
+
+
 # 時分フォーマット
 def format_hour_minute(minute):
     return "{0:02d}".format(int(minute / 60)) + ":" + "{0:02d}".format(int(minute % 60))
 
 
-# datetime変換
-def convert_datetime(str_dt, str_format="%Y/%m/%d %H:%M:%S"):
-    return datetime.datetime.strptime(str_dt, str_format)
+# date変換
+def convert_date(str_dt, str_format="%Y/%m/%d"):
+    dt = convert_datetime(str_dt, str_format)
+    return datetime.date(dt.year, dt.month, dt.day)
 
 
 # time変換
@@ -263,23 +272,52 @@ def convert_time(str_dt, str_format="%H:%M:%S"):
     return datetime.time(dt.hour, dt.minute, dt.second, dt.microsecond)
 
 
-# 標準出力処理(printではSupervisorログに出力されない為)
-def print_stdout(text):
-    sys.stdout.write(str(text))
-    sys.stdout.write("\n")
-    sys.stdout.flush()
+# datetime変換
+def convert_datetime(str_dt, str_format="%Y/%m/%d %H:%M:%S"):
+    return datetime.datetime.strptime(str_dt, str_format)
 
 
-# ライン表示用書式変換処理
-def format_date(dt, s_format="%Y-%m-%d"):
-    if not dt:
+# 日付型文字列フォーマット
+def format_date(date, s_format="%Y/%m/%d"):
+    if not date:
         return ""
 
-    return datetime.date.strftime(dt, s_format)
+    return datetime.date.strftime(date, s_format)
 
 
+# 時刻型文字列フォーマット
 def format_time(time, s_format="%H:%M:%S"):
     if not time:
         return ""
 
     return datetime.time.strftime(time, s_format)
+
+
+# 日付時刻型文字列フォーマット
+def format_datetime(dt, s_format="%Y/%m/%d %H:%M:%S"):
+    if not dt:
+        return ""
+
+    return datetime.datetime.strftime(dt, s_format)
+
+
+# 月初取得
+def get_first_day(dt):
+    return dt - datetime.timedelta(days=dt.day-1)
+
+
+# 月末取得
+def get_last_day(dt):
+    return dt + relativedelta(months=1) - datetime.timedelta(days=dt.day)
+
+
+# 文字列日付から月初取得
+def get_first_day_by_str_date(str_dt, s_format="%Y/%m/%d"):
+    dt = convert_date(str_dt, s_format)
+    return get_first_day(dt)
+
+
+# 文字列日付から月末取得
+def get_last_day_by_str_date(str_dt, s_format="%Y/%m/%d"):
+    dt = convert_date(str_dt, s_format)
+    return get_last_day(dt)

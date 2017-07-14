@@ -223,9 +223,9 @@ def attendance_concat():
 def attendance_details():
 
     request_json = routing_util.get_request_param(request)
-    code_list = confirm.work_confirm(g_db_conn, request_json)
+    send_content = confirm.work_confirm(g_db_conn, request_json)
 
-    return routing_util.create_result_json(code_list)
+    return routing_util.create_result_json(send_content)
 
 
 # 勤怠実績照会
@@ -233,9 +233,9 @@ def attendance_details():
 def attendance_plans_inquiry():
 
     request_json = routing_util.get_request_param(request)
-    code_list = confirm.plans_inquiry(g_db_conn, request_json)
+    send_content = confirm.plans_inquiry(g_db_conn, request_json)
 
-    return routing_util.create_result_json(code_list)
+    return routing_util.create_result_json(send_content)
 
 
 # 勤怠予定照会
@@ -243,6 +243,39 @@ def attendance_plans_inquiry():
 def attendance_plans_work():
 
     request_json = routing_util.get_request_param(request)
-    code_list = confirm.plans_work(g_db_conn, request_json)
+    send_content = confirm.plans_work(g_db_conn, request_json)
 
-    return routing_util.create_result_json(code_list)
+    return routing_util.create_result_json(send_content)
+
+
+# 勤怠実績・見込照会(部門別)
+@app.route("/attendance/confilm/results/department", methods=["GET", "POST"])
+def attendance_confirm_results_department():
+
+    request_json = routing_util.get_request_param(request)
+    import attendance.confirm2 as confirm2
+    send_content = confirm2.results_department(g_db_conn, request_json)
+
+    return routing_util.create_result_json(send_content)
+
+
+# 勤怠実績・見込照会(個人別)
+@app.route("/attendance/confilm/results/person", methods=["GET", "POST"])
+def attendance_confirm_results_person():
+
+    request_json = routing_util.get_request_param(request)
+    import attendance.confirm2 as confirm2
+    send_content = confirm2.results_person(g_db_conn, request_json)
+
+    return routing_util.create_result_json(send_content)
+
+
+# 休暇照会(個人別)
+@app.route("/attendance/confilm/holiday/person", methods=["GET", "POST"])
+def attendance_confirm_holiday_person():
+
+    request_json = routing_util.get_request_param(request)
+    import attendance.confirm2 as confirm2
+    send_content = confirm2.holiday_person(g_db_conn, request_json)
+
+    return routing_util.create_result_json(send_content)
