@@ -360,7 +360,6 @@ def plans_work(db_conn, request_json):
         "attendance_date": request_json["attendance_date"]
     }
     results = db_conn.select_dict(sql, param)
-    #results["first_day"] = common_module.format_month_day(results["first_day"], "%m/%d")
 
     sql_name = "select name from users where id = %(user_id)s"
 
