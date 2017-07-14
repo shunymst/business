@@ -24,8 +24,8 @@ def get_detail(db_conn, request_json):
         """
 
     param = {
-        "user_id": request_json["003"],
-        "password": request_json["a"]
+        "user_id": request_json["user_id"],
+        "password": request_json["password"]
     }
     user_info = db_conn.select_dict(sql, param)
 
