@@ -10,6 +10,9 @@ def main():
 
 
 if __name__ == "__main__":
-    conn = db_connection.DBConn()
+    # INIファイル設定
+    g_ini_def = common_module.read_ini("conf/environment.ini")["DEFAULT"]
+    # DB Connection作成
+    g_db_conn = db_connection.DBConn(g_ini_def["DB_CONNECTION_STR"])
 
-    common_module.print_stdout(conn.select_dict("select %(test)s, %(test2)s, %(test)s", {"test": "a", "test2": "b", }))
+    common_module.print_stdout(g_db_conn.select_dict("select %(test)s, %(test2)s, %(test)s", {"test": "a", "test2": "b", }))
