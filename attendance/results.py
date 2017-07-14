@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from attendance import code_master
 from attendance import interruption
+from util import common_module
 
 
 def check_result(db_conn, request_json):
@@ -131,3 +132,116 @@ def delete(db_conn, request_json):
     interruption.delete(db_conn, request_json)
 
     return "OK"
+
+
+# 実績取得処理
+def get(db_conn, user_id, attendance_date):
+    sql = """
+select
+  user_id
+  , attendance_date
+  , status
+  , employee_division
+  , results_division
+  , work_division
+  , start_time
+  , end_time
+  , work_time
+  , rest_time
+  , over_time
+  , delay_reason
+  , holiday_division
+  , holiday_reason
+  , remarks
+  , approver_id
+from
+  results r 
+where
+  r.user_id = %(user_id)s 
+  and r.attendance_date = %(attendance_date)s
+"""
+
+    dt_attendance_date = common_module.convert_date(attendance_date)
+    param = {
+        "user_id": user_id,
+        "attendance_date": dt_attendance_date
+    }
+
+    return db_conn.select_dict(sql, param)
+
+
+# 月別実績取得処理（個人）
+def get_monthly_results_of_parson(db_conn, user_id, base_date):
+    sql = """
+select
+  r.user_id
+  , sum(r.work_time) as work_time
+  , sum(r.over_time) as over_time 
+  , sum(case when c.holiday_flag = '1' then 1 else 0 end) holiday_work_count
+  , sum(case when r.results_division = '2' then 1 when cm.division3 = '1' then 0.5 else 0 end) holiday_count
+from
+  results r
+inner join
+  calendar c
+  on c.employee_division = r.employee_division
+  and c.calendar_date = r.attendance_date
+inner join
+  code_master cm
+  on cm.class = %(class_work_division)s
+  and cm.code = r.work_division
+where
+  r.user_id = %(user_id)s 
+  and r.attendance_date between %(attendance_date_start)s and %(attendance_date_end)s
+group by
+  r.user_id
+"""
+
+    dt_base_date = common_module.convert_date(base_date)
+    param = {
+        "user_id": user_id,
+        "attendance_date_start": common_module.get_first_day(dt_base_date),
+        "attendance_date_end": common_module.get_last_day(dt_base_date),
+        "class_work_division": code_master.CLASS_WORK_DIVISION
+    }
+
+    return db_conn.select_dict(sql, param)
+
+
+# 月別実績取得処理（部門）
+def get_monthly_results_of_department(db_conn, user_id, base_date):
+    sql = """
+select
+  r.department_id
+  , sum(r.work_time) as work_time
+  , sum(r.over_time) as over_time 
+  , sum(case when c.holiday_flag = '1' then 1 else 0 end) holiday_work_count
+  , sum(case when r.results_division = '2' then 1 when cm.division3 = '1' then 0.5 else 0 end) holiday_count
+from
+  users u
+inner join
+  results r
+  on r.user_id = u.id
+inner join
+  calendar c
+  on c.employee_division = r.employee_division
+  and c.calendar_date = r.attendance_date
+inner join
+  code_master cm
+  on cm.class = %(class_work_division)s
+  and cm.code = r.work_division
+where
+  u.department_id = %(user_id)s 
+  and r.attendance_date between %(attendance_date_start)s and %(attendance_date_end)s
+group by
+  r.user_id
+"""
+
+    dt_base_date = common_module.convert_date(base_date)
+    param = {
+        "user_id": user_id,
+        "attendance_date_start": common_module.get_first_day(dt_base_date),
+        "attendance_date_end": common_module.get_last_day(dt_base_date),
+        "class_work_division": code_master.CLASS_WORK_DIVISION
+    }
+
+    return db_conn.select_dict(sql, param)
