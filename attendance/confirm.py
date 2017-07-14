@@ -345,7 +345,7 @@ def plans_work(db_conn, request_json):
         where user_id = %(user_id)s and 
         attendance_date between date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) and 
         date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day'
-        order by p.attendance_date;
+        order by p.attendance_date
         """
 
     # param = [
@@ -364,9 +364,9 @@ def plans_work(db_conn, request_json):
 
     sql_name = "select name from users where id = %(user_id)s"
 
-    #param_name = [
+    # param_name = [
     #    request_json["user_id"]
-    #]
+    # ]
 
     param_name = {
         "user_id": request_json["user_id"]
