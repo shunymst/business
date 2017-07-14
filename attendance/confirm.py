@@ -325,7 +325,8 @@ def plans_inquiry(db_conn, request_json):
         #send_content["results2"] = convert_date_to_string(results2[0])
         for plan_rec in results2:
             plan_list += common_module.format_date(plan_rec["attendance_date"], "%d日") + "(" + plan_rec["dow"] + ")" + \
-                                  common_module.format_time(plan_rec["start_time"], "%H:%M") + "～" + common_module.format_time(plan_rec["end_time"], "%H:%M") + "\n"
+                common_module.format_time(plan_rec["start_time"], "%H:%M") + "～" + \
+                common_module.format_time(plan_rec["end_time"], "%H:%M") + "\n"
         send_content["result2"] = plan_list
         send_content["message"] = "OK"
 
@@ -336,15 +337,15 @@ def plans_inquiry(db_conn, request_json):
 def plans_work(db_conn, request_json):
     sql = """
         select p.attendance_date, to_char(p.attendance_date, 'FMDD日') as date,
-        date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) as first_day,
-        date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day' as last_day,
+        to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')),'FMMM月FMDD日') first_day,
+        to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day','FMMM月FMDD日') last_day,
         (ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
         p.results_division,p.start_time,p.end_time
         from plans p 
         where user_id = %(user_id)s and 
         attendance_date between date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) and 
         date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day'
-        order by p.attendance_date;
+        order by p.attendance_date
         """
 
     # param = [
@@ -363,9 +364,9 @@ def plans_work(db_conn, request_json):
 
     sql_name = "select name from users where id = %(user_id)s"
 
-    #param_name = [
+    # param_name = [
     #    request_json["user_id"]
-    #]
+    # ]
 
     param_name = {
         "user_id": request_json["user_id"]
@@ -377,11 +378,12 @@ def plans_work(db_conn, request_json):
 
     if results and len(results):
         send_content["results"] = convert_date_to_string(results[0])
+
         send_content["results_name"] = results_name[0]
         for plan_rec in results:
             plan_list += common_module.format_date(plan_rec["attendance_date"], "%d日") + "(" + plan_rec["dow"] + ")" + \
-                        common_module.format_time(plan_rec["start_time"], "%H:%M") + "～" + common_module.format_time(
-                        plan_rec["end_time"], "%H:%M") + "\n"
+                            common_module.format_time(plan_rec["start_time"], "%H:%M") + "～" + \
+                            common_module.format_time(plan_rec["end_time"], "%H:%M") + "\n"
         send_content["results_list"] = plan_list
         send_content["message"] = "OK"
 
