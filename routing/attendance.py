@@ -41,7 +41,7 @@ def attendance_users_get_detail():
     user_info = users.get_detail(g_db_conn, request_json)
 
     send_content = {"list": user_info[0],
-                    "message": "No"}
+                    "message": "NG"}
 
     if send_content["list"] and len(send_content["list"]) > 0:
         send_content["message"] = "OK"
@@ -52,10 +52,11 @@ def attendance_users_get_detail():
 # LineID認証登録
 @app.route("/attendance/user/certification_registration", methods=["GET", "POST"])
 def attendance_users_certification_registration():
-    message = "No"
     request_json = routing_util.get_request_param(request)
 
-    message = users.certification_registration(g_db_conn, request_json)
+    send_content = users.certification_registration(g_db_conn, request_json)
+    return routing_util.create_result_json(send_content)
+
 
 
 # 実績登録初期化

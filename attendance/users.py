@@ -43,5 +43,8 @@ def certification_registration(db_conn, request_json):
         "user_id": request_json["user_id"]
     }
     db_conn.update(sql, param)
-    return "OK"
+    send_content = {
+        "message": "OK"
+    }
+    return send_content
 
