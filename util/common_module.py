@@ -282,4 +282,11 @@ def format_time(ds, s_format="%H:%M:%S"):
     if not ds:
         return ""
 
-    return datetime.time.strftime(ds, s_format)
+    return datetime.date.strftime(ds, s_format)
+
+
+def format_month_day(dm, s_format="%Y-%m-%d"):
+    if not dm:
+        return ""
+
+    return datetime.date.strftime(dm, s_format)
