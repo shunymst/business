@@ -49,6 +49,15 @@ def attendance_users_get_detail():
     return routing_util.create_result_json(send_content)
 
 
+# LineID認証登録
+@app.route("/attendance/user/certification_registration", methods=["GET", "POST"])
+def attendance_users_certification_registration():
+    message = "No"
+    request_json = routing_util.get_request_param(request)
+
+    message = users.certification_registration(g_db_conn, request_json)
+
+
 # 実績登録初期化
 @app.route("/attendance/result/init", methods=["GET", "POST"])
 def attendance_result_init():

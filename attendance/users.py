@@ -32,3 +32,16 @@ def get_detail(db_conn, request_json):
 
     return user_info
 
+
+def certification_registration(db_conn, request_json):
+    sql = """
+        update users set mid = %(mid)s where id = %(user_id)s;
+        """
+        # noqa
+    param = {
+        "mid": request_json["mid"],
+        "user_id": request_json["user_id"]
+    }
+    db_conn.update(sql, param)
+    return "OK"
+
