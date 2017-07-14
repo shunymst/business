@@ -33,6 +33,16 @@ def attendance_users_get():
     return routing_util.create_result_json(send_content)
 
 
+# アカウント認証
+@app.route("/attendance/user/get_detail", methods=["GET", "POST"])
+def attendance_users_get_detail():
+    request_json = routing_util.get_request_param(request)
+
+    user_info = users.get_detail(g_db_conn, request_json)
+
+    return routing_util.create_result_json(user_info)
+
+
 # 実績登録初期化
 @app.route("/attendance/result/init", methods=["GET", "POST"])
 def attendance_result_init():
@@ -279,3 +289,5 @@ def attendance_confirm_holiday_person():
     send_content = confirm2.holiday_person(g_db_conn, request_json)
 
     return routing_util.create_result_json(send_content)
+
+
