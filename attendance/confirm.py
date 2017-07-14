@@ -300,17 +300,21 @@ def plans_inquiry(db_conn, request_json):
             as date,(ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
             r.results_division,r.start_time,r.end_time 
             from results r 
-            where user_id = (%s) and 
-            attendance_date between date_trunc('month', to_date((%s), 'YYYY/MM/DD')) and 
-            date_trunc('month', to_date((%s), 'YYYY/MM/DD')) + '1 month' + '-1 Day'
+            where user_id = %(user_id)s and 
+            attendance_date between date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) and 
+            date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) + '1 month' + '-1 Day'
             order by r.attendance_date
             """
 
-    param2 = [
-        request_json["user_id"],
-        request_json["attendance_date"],
-        request_json["attendance_date"]
-    ]
+    # param2 = [
+    #     request_json["user_id"],
+    #     request_json["attendance_date"],
+    #     request_json["attendance_date"]
+    # ]
+    param2 = {
+        "user_id": request_json["user_id"],
+        "attendance_date": request_json["attendance_date"]
+    }
     results2 = db_conn.select_dict(sql2, param2)
 
     send_content = {}
