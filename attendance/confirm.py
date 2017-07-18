@@ -20,11 +20,12 @@ select
   , r.holiday_division
   , r.holiday_reason
   , r.remarks
-  , r.attendance_date_start
   , r_total.sum_work_time
   , r_total.sum_over_time
   , coalesce(r_total.sum_work_time, interval '0') + coalesce(p.sum_work_time, interval '0') as prospects_work_time
   , coalesce(r_total.sum_over_time, interval '0') + coalesce(p.sum_over_time, interval '0') as prospects_over_time 
+  , to_char(%(attendance_date_start)s, 'YYYY/MM/DD')
+  , to_char(%(attendance_date_end)s, 'YYYY/MM/DD')
 from
   results r 
   inner join ( 
@@ -161,6 +162,7 @@ def plans_inquiry(db_conn, request_json):
                 common_module.format_time(plan_rec["end_time"], "%H:%M") + "\n"
         send_content["result2"] = plan_list
         send_content["message"] = "OK"
+
 
     return send_content
 
