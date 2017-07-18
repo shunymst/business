@@ -280,8 +280,9 @@ def attendance_confirm_results_department():
 
     request_json = routing_util.get_request_param(request)
     import attendance.confirm2 as confirm2
+    import attendance.plans as plans
     send_content = confirm2.results_department(g_db_conn, request_json)
-
+    send_content = plans.get_monthly_prospects_of_department(g_db_conn, request_json)
     return routing_util.create_result_json(send_content)
 
 
