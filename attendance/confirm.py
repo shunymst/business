@@ -24,8 +24,8 @@ select
   , r_total.sum_over_time
   , coalesce(r_total.sum_work_time, interval '0') + coalesce(p.sum_work_time, interval '0') as prospects_work_time
   , coalesce(r_total.sum_over_time, interval '0') + coalesce(p.sum_over_time, interval '0') as prospects_over_time 
-  , to_char(%(attendance_date_start)s, 'YYYY/MM/DD')
-  , to_char(%(attendance_date_end)s, 'YYYY/MM/DD')
+  , to_char(%(attendance_date_start)s, 'YYYY/MM/DD') as start_time
+  , to_char(%(attendance_date_end)s, 'YYYY/MM/DD') as end_time
 from
   results r 
   inner join ( 
