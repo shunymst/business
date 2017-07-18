@@ -20,8 +20,8 @@ select
   , r.holiday_division
   , r.holiday_reason
   , r.remarks
-  ,to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')),'FMMM月FMDD日') first_day
-  ,to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD'))
+  , to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')),'FMMM月FMDD日') first_day
+  , to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD'))
    + '1 month' + '-1 Day','FMMM月FMDD日') last_day
   , r_total.sum_work_time
   , r_total.sum_over_time
