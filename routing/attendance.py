@@ -10,7 +10,9 @@ from attendance import time_master
 from attendance import users
 from attendance import calendar
 from attendance import confirm
-from util import common_module
+from attendance import plans
+from attendance import department
+
 
 # ユーザー情報取得
 @app.route("/attendance/user/get", methods=["GET", "POST"])
@@ -56,7 +58,6 @@ def attendance_users_certification_registration():
 
     send_content = users.certification_registration(g_db_conn, request_json)
     return routing_util.create_result_json(send_content)
-
 
 
 # 実績登録初期化
@@ -279,16 +280,12 @@ def attendance_plans_work():
 def attendance_confirm_results_department():
 
     request_json = routing_util.get_request_param(request)
-    import attendance.confirm2 as confirm2
-    import attendance.plans as plans
-    import attendance.department as department
-    send_content = {}
-    send_content["month"] = common_module.format_date(request_json["attendance_date"], '%m月')
+    send_content = {"month": request_json["attendance_date"][5: 7] + "月"}
 
     confirm.set_send_content(department.get(g_db_conn, request_json["department_id"]), send_content, "department")
     # confirm.set_send_content(confirm2.results_department(g_db_conn, request_json), send_content, "confirm")
-    confirm.set_send_content(results.get_monthly_results_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "results")
-    confirm.set_send_content(plans.get_monthly_prospects_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "plans")
+    confirm.set_send_content(results.get_monthly_results_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "results")  # noqa
+    confirm.set_send_content(plans.get_monthly_prospects_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "plans")  # noqa
 
     return routing_util.create_result_json(send_content)
 
@@ -313,5 +310,3 @@ def attendance_confirm_holiday_person():
     send_content = confirm2.holiday_person(g_db_conn, request_json)
 
     return routing_util.create_result_json(send_content)
-
-
