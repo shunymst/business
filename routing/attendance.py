@@ -283,7 +283,7 @@ def attendance_confirm_results_department():
     import attendance.plans as plans
     import attendance.department as department
     send_content = {}
-    send_content["month"] = common_module.format_date(request_json["attendance_date"], '%M月')
+    send_content["month"] = common_module.format_date(request_json["attendance_date"], '%m月')
 
     confirm.set_send_content(department.get(g_db_conn, request_json["department_id"]), send_content, "department")
     # confirm.set_send_content(confirm2.results_department(g_db_conn, request_json), send_content, "confirm")
