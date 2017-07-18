@@ -282,7 +282,8 @@ def attendance_confirm_results_department():
     import attendance.confirm2 as confirm2
     import attendance.plans as plans
     import attendance.department as department
-    send_content = []
+    send_content = {}
+    
     send_content["department"] = department.get(g_db_conn, request_json["department_id"])
     send_content["confirm"] = confirm2.results_department(g_db_conn, request_json)
     send_content["results"] =  results.get_monthly_results_of_department(g_db_conn, request_json["department_id"], request_json["attendance_date"])
