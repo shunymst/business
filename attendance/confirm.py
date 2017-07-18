@@ -20,9 +20,7 @@ select
   , r.holiday_division
   , r.holiday_reason
   , r.remarks
-  , to_char(date_trunc('month', to_date(%(r.attendance_date)s, 'YYYY/MM/DD')),'FMMM月FMDD日') first_day
-  , to_char(date_trunc('month', to_date(%(r.attendance_date)s, 'YYYY/MM/DD'))
-   + '1 month' + '-1 Day','FMMM月FMDD日') last_day
+  , attendance_date_start
   , r_total.sum_work_time
   , r_total.sum_over_time
   , coalesce(r_total.sum_work_time, interval '0') + coalesce(p.sum_work_time, interval '0') as prospects_work_time
