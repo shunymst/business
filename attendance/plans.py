@@ -55,7 +55,7 @@ inner join
   calendar c
   on c.employee_division = p.employee_division
   and c.calendar_date = p.attendance_date
-inner join
+left outer join
   code_master cm
   on cm.class = %(class_work_division)s
   and cm.code = p.work_division
@@ -97,7 +97,7 @@ inner join
   calendar c
   on c.employee_division = p.employee_division
   and c.calendar_date = p.attendance_date
-inner join
+left outer join
   code_master cm
   on cm.class = %(class_work_division)s
   and cm.code = p.work_division
