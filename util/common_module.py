@@ -282,7 +282,7 @@ def format_date(date, s_format="%Y/%m/%d"):
     if not date:
         return ""
 
-    if isinstance(str, date):
+    if isinstance(str, type(date)):
         date = convert_date(date, s_format)
 
     return datetime.date.strftime(date, s_format)
