@@ -20,7 +20,7 @@ select
   , r.holiday_division
   , r.holiday_reason
   , r.remarks
-  , attendance_date_start
+  , r.attendance_date_start
   , r_total.sum_work_time
   , r_total.sum_over_time
   , coalesce(r_total.sum_work_time, interval '0') + coalesce(p.sum_work_time, interval '0') as prospects_work_time
