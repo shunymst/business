@@ -5,6 +5,7 @@ import copy
 from util import common_module
 from attendance import users
 from attendance import department
+import decimal
 
 
 # 実績・見込取得処理（個人）
@@ -120,7 +121,8 @@ def convert_date_to_string(send_results):
         elif isinstance(dic[k], datetime.date) or isinstance(dic[k], datetime.time):
             common_module.print_stdout(1)
             dic[k] = str(dic[k])
-
+        elif isinstance(dic[k], decimal.Decimal):
+            dic[k] = float(dic[k])
     return dic
 
 
@@ -167,7 +169,6 @@ def plans_inquiry(db_conn, request_json):
                 common_module.format_time(plan_rec["end_time"], "%H:%M") + "\n"
         send_content["result2"] = plan_list
         send_content["message"] = "OK"
-
 
     return send_content
 
