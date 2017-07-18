@@ -124,6 +124,11 @@ def convert_date_to_string(send_results):
     return dic
 
 
+def set_send_content(results, send_content, key_name):
+    if results and len(results) > 0:
+        send_content[key_name] = convert_date_to_string(results[0])
+
+
 # 勤怠実績照会
 def plans_inquiry(db_conn, request_json):
 

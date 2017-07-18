@@ -284,10 +284,11 @@ def attendance_confirm_results_department():
     import attendance.department as department
     send_content = {}
 
-    send_content["department"] = confirm.convert_date_to_string(department.get(g_db_conn, request_json["department_id"]))
-    send_content["confirm"] = confirm.convert_date_to_string(confirm2.results_department(g_db_conn, request_json))
-    send_content["results"] =  confirm.convert_date_to_string(results.get_monthly_results_of_department(g_db_conn, request_json["department_id"], request_json["attendance_date"]))
-    send_content["plans"] = confirm.convert_date_to_string(plans.get_monthly_prospects_of_department(g_db_conn, request_json["department_id"], request_json["attendance_date"]))
+    confirm.set_send_content(department.get(g_db_conn, request_json["department_id"]), send_content, "department")
+    confirm.set_send_content(confirm2.results_department(g_db_conn,request_json), send_content, "confirm")
+    confirm.set_send_content(results.get_monthly_results_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "results")
+    confirm.set_send_content(plans.get_monthly_prospects_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "plans")
+
     return routing_util.create_result_json(send_content)
 
 
