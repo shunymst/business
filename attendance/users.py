@@ -3,7 +3,7 @@
 
 
 def get(db_conn, request_json):
-    sql = "select id, email, name, employee_division, to_char(approver_flag)," \
+    sql = "select id, email, name, employee_division, approver_flag," \
           "(select code_name from code_master where class='0001' and code=users.employee_division) as employee_division_name " \
           "from users where mid = %(mid)s and enabled = 't'"  # noqa
     param = {
