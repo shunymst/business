@@ -106,7 +106,7 @@ where
   and p.attendance_date between %(attendance_date_start)s and %(attendance_date_end)s
   and not exists(select * from results r where r.user_id = p.user_id and r.attendance_date = p.attendance_date)
 group by
-  p.department_id
+  u.department_id
 """
 
     dt_base_date = common_module.convert_date(base_date)
