@@ -86,15 +86,7 @@ group by
     }
     results = db_conn.select_dict(sql, param)
 
-    send_content = {}
-
-    if results and len(results):
-        send_content["results"] = confirm.convert_date_to_string(results[0])
-        send_content["message"] = "OK"
-    else:
-        send_content["message"] = "NG"
-
-    return send_content
+    return results
 
 
 # 勤怠実績・見込照会(個人別)

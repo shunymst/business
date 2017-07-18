@@ -285,7 +285,7 @@ def attendance_confirm_results_department():
     send_content = {}
 
     confirm.set_send_content(department.get(g_db_conn, request_json["department_id"]), send_content, "department")
-    confirm.set_send_content(confirm2.results_department(g_db_conn,request_json), send_content, "confirm")
+    confirm.set_send_content(confirm2.results_department(g_db_conn, request_json), send_content, "confirm")
     confirm.set_send_content(results.get_monthly_results_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "results")
     confirm.set_send_content(plans.get_monthly_prospects_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "plans")
 
