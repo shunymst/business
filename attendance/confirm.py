@@ -20,6 +20,9 @@ select
   , r.holiday_division
   , r.holiday_reason
   , r.remarks
+  ,to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')),'FMMM月FMDD日') first_day
+  ,to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD'))
+   + '1 month' + '-1 Day','FMMM月FMDD日') last_day
   , r_total.sum_work_time
   , r_total.sum_over_time
   , coalesce(r_total.sum_work_time, interval '0') + coalesce(p.sum_work_time, interval '0') as prospects_work_time
@@ -128,10 +131,7 @@ def plans_inquiry(db_conn, request_json):
     results = get_results_prospects_person(db_conn, request_json["user_id"], request_json["attendance_date"])
 
     sql2 = """
-            select r.attendance_date, to_char(r.attendance_date, 'FMDD日') 
-            as date, to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')),'FMMM月FMDD日') as first_day,
-            to_char(date_trunc('month', to_date(%(attendance_date)s, 'YYYY/MM/DD')) 
-            + '1 month' + '-1 Day','FMMM月FMDD日') as last_day,
+            select r.attendance_date, to_char(r.attendance_date, 'FMDD日') as date,
             (ARRAY['日','月','火','水','木','金','土'])[EXTRACT(DOW FROM CAST(attendance_date AS DATE)) + 1] as dow,
             r.results_division,r.start_time,r.end_time 
             from results r 
