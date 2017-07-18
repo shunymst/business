@@ -83,7 +83,7 @@ def get_monthly_prospects_of_department(db_conn, department_id, base_date):
     sql = """
 select
     u.department_id
-  , count(distinct r.id) as user_count
+  , count(distinct u.id) as user_count
   , sum(p.work_time) as work_time
   , sum(p.over_time) as over_time 
   , sum(case when c.holiday_flag = '1' then 1 else 0 end) holiday_work_count
