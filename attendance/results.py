@@ -211,7 +211,7 @@ group by
 def get_monthly_results_of_department(db_conn, department_id, base_date):
     sql = """
 select
-  r.department_id
+  u.department_id
   , count(distinct r.id) as user_count
   , sum(r.work_time) as work_time
   , sum(r.over_time) as over_time 
