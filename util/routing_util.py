@@ -20,6 +20,6 @@ def get_request_param(req):
 
 def create_result_json(send_content):
     print_stdout("Output:{}".format(
-        json.dumps(send_content, indent=4, separators=(",", ": "), ensure_ascii=False)
+        json.dumps(send_content, indent=4, separators=(",", ": "), ensure_ascii=False, use_decimal=True)
     ))
     return jsonify(send_content)
