@@ -212,7 +212,7 @@ def get_monthly_results_of_department(db_conn, department_id, base_date):
     sql = """
 select
   u.department_id
-  , count(distinct r.id) as user_count
+  , count(distinct u.id) as user_count
   , sum(r.work_time) as work_time
   , sum(r.over_time) as over_time 
   , sum(case when c.holiday_flag = '1' then 1 else 0 end) holiday_work_count
@@ -234,7 +234,7 @@ where
   u.department_id = %(department_id)s 
   and r.attendance_date between %(attendance_date_start)s and %(attendance_date_end)s
 group by
-  r.department_id
+  u.department_id
 """
 
     dt_base_date = common_module.convert_date(base_date)
