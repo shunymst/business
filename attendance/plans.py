@@ -82,7 +82,7 @@ group by
 def get_monthly_prospects_of_department(db_conn, department_id, base_date):
     sql = """
 select
-    r.department_id
+    u.department_id
   , count(distinct r.id) as user_count
   , sum(p.work_time) as work_time
   , sum(p.over_time) as over_time 
