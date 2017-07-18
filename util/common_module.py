@@ -293,7 +293,7 @@ def format_time(time, s_format="%H:%M:%S"):
     if not time:
         return ""
 
-    if isinstance(str, time):
+    if isinstance(str, type(time)):
         time = convert_time(time, s_format)
 
     return datetime.time.strftime(time, s_format)
@@ -304,7 +304,7 @@ def format_datetime(dt, s_format="%Y/%m/%d %H:%M:%S"):
     if not dt:
         return ""
 
-    if isinstance(str, datetime):
+    if isinstance(str, type(datetime)):
         dt = convert_datetime(datetime, s_format)
 
     return datetime.datetime.strftime(dt, s_format)
