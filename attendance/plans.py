@@ -146,7 +146,7 @@ def prospect_department_overtime(db_conn, department_id, base_date):
     param = {
         "department_id": department_id,
         "attendance_date_start": common_module.get_first_day(dt_base_date),
-        "attendance_date_end": common_module.get_last_day(dt_base_date),
+        "attendance_date_end": common_module.get_last_day(dt_base_date)
     }
     send_content = {}
     results = db_conn.select_dict(sql, param)
