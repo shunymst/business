@@ -134,7 +134,7 @@ def prospect_department_overtime(db_conn, department_id, base_date):
         on r.user_id = u.id
         inner join
         plans p
-        on u.id = p.user.id
+        on u.id = p.user_id
   
         where p.attendance_date between %(attendance_date_start)s
         and %(attendance_date_end)s
