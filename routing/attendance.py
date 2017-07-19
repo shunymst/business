@@ -285,7 +285,8 @@ def attendance_confirm_results_department():
     confirm.set_send_content(department.get(g_db_conn, request_json["department_id"]), send_content, "department")
     confirm.set_send_content(results.get_monthly_results_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "results")  # noqa
     confirm.set_send_content(plans.get_monthly_prospects_of_department(g_db_conn,  request_json["department_id"], request_json["attendance_date"]), send_content, "plans")  # noqa
-
+    send_content = results.department_overtime_chack(g_db_conn, request_json["department_id"], request_json["attendance_date"])     # noqa
+    send_content = plans.prospect_department_overtime(g_db_conn, request_json["department_id"],request_json["attendance_date"])     # noqa
     return routing_util.create_result_json(send_content)
 
 

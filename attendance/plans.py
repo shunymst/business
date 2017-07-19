@@ -3,6 +3,7 @@
 from attendance import code_master
 from attendance import interruption
 from util import common_module
+import datetime
 
 
 # 予定取得処理
@@ -118,3 +119,49 @@ group by
     }
 
     return db_conn.select_dict(sql, param)
+
+
+# 見込部門残業超過判断
+def prospect_department_overtime(db_conn, department_id, base_date):
+
+    sql = """
+        select 
+        u.id 
+        , sum(p.over_time) as over_time 
+        from users u
+        inner join
+        results r
+        on r.user_id = u.id
+        inner join
+        plans p
+        on u.id = p.user.id
+  
+        where p.attendance_date between %(attendance_date_start)s
+        and %(attendance_date_end)s
+        and not exists(select * from results r 
+        where r.user_id = p.user_id and r.attendance_date = p.attendance_date)
+        group by u.id;
+        """
+    dt_base_date = common_module.convert_date(base_date)
+    param = {
+        "department_id": department_id,
+        "attendance_date_start": common_module.get_first_day(dt_base_date),
+        "attendance_date_end": common_module.get_last_day(dt_base_date),
+    }
+    send_content = {}
+    results = db_conn.select_dict(sql, param)
+
+    # common_module.print_stdout(over_time)
+    p_warning_count = 0
+    p_excess_count = 0
+    for plan_rec in results:
+        if (plan_rec["sum_over_time"] > datetime.timedelta(hours=35)) \
+                and (plan_rec["sum_over_time"] < datetime.timedelta(hours=40)):
+            p_warning_count += 1
+
+        elif plan_rec["sum_over_time"] >= datetime.timedelta(hours=40):
+            p_excess_count += 1
+
+    send_content["p_warning_count"] = p_warning_count
+    send_content["p_excess_count"] = p_excess_count
+    return send_content
