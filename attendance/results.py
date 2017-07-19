@@ -285,13 +285,14 @@ def department_overtime_chack(db_conn, department_id, base_date):
     # common_module.print_stdout(over_time)
     warning_count = 0
     excess_count = 0
-    for plan_rec in results:
-        if (plan_rec["sum_over_time"] > datetime.timedelta(hours=35)) \
+    if results and len(results):
+        for plan_rec in results:
+            if (plan_rec["sum_over_time"] > datetime.timedelta(hours=35)) \
                 and (plan_rec["sum_over_time"] < datetime.timedelta(hours=40)):
-            warning_count += 1
+                warning_count += 1
 
-        elif plan_rec["sum_over_time"] >= datetime.timedelta(hours=40):
-            excess_count += 1
+            elif plan_rec["sum_over_time"] >= datetime.timedelta(hours=40):
+                excess_count += 1
 
     send_content["warning_count"] = warning_count
     send_content["excess_count"] = excess_count

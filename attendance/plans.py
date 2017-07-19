@@ -154,13 +154,14 @@ def prospect_department_overtime(db_conn, department_id, base_date):
     # common_module.print_stdout(over_time)
     p_warning_count = 0
     p_excess_count = 0
-    for plan_rec in results:
-        if (plan_rec["sum_over_time"] > datetime.timedelta(hours=35)) \
-                and (plan_rec["sum_over_time"] < datetime.timedelta(hours=40)):
-            p_warning_count += 1
+    if results and len(results):
+        for plan_rec in results:
+            if (plan_rec["sum_over_time"] > datetime.timedelta(hours=35)) \
+                    and (plan_rec["sum_over_time"] < datetime.timedelta(hours=40)):
+                p_warning_count += 1
 
-        elif plan_rec["sum_over_time"] >= datetime.timedelta(hours=40):
-            p_excess_count += 1
+            elif plan_rec["sum_over_time"] >= datetime.timedelta(hours=40):
+                p_excess_count += 1
 
     send_content["p_warning_count"] = p_warning_count
     send_content["p_excess_count"] = p_excess_count
